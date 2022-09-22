@@ -1,9 +1,16 @@
 #pragma once
 
-class linkedhs{
-    public:
-        linkedhs();
-        ~linkedhs();
-    private:
-        int * arr_;
+#include <list>
+#include "student.hpp"
+
+class linkedhs {
+public:
+    linkedhs();
+    ~linkedhs();
+
+    bool insert(const element &e);
+    bool remove(const element &e);
+
+private:
+    std::list <student> *arr_;
 };
