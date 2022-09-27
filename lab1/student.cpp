@@ -9,7 +9,7 @@ bool student::operator==(const student &other) const {
     return age_ == other.age_ && name_ == other.name_;
 }
 
-long long student::hash() const {
+unsigned long long student::hash() const {
     // djb2 hash func
     std::string s = name_ + std::to_string(age_);
     unsigned long hash = 5381;

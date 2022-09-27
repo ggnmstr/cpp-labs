@@ -12,6 +12,6 @@ public:
     bool remove(const element &e);
 
 private:
-    std::list <student> *arr_;
     int capacity_;
+    std::list<student> **arr_;
 };
