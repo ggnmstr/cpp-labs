@@ -8,13 +8,20 @@ public:
     linkedhs();
     linkedhs(const linkedhs &other);
     ~linkedhs();
+    linkedhs & operator=(const linkedhs & other);
+
+    bool insert(const element &e);
+    bool remove(const element &e);
+
+    void swap(linkedhs &other);
 
     size_t size() const;
     bool empty() const;
 
+    bool contains(const element & e) const;
 
-    bool insert(const element &e);
-    bool remove(const element &e);
+
+    void clear();
 
 private:
     static const int DEFAULT_CAPACITY = 512;

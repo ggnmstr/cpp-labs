@@ -22,12 +22,45 @@ linkedhs::linkedhs(const linkedhs &other):
 
 }
 
-linkedhs::~linkedhs() {
-    for (int i = 0; i < capacity_ ; i++){
-        delete arr_[i];
+linkedhs& linkedhs::operator=(const linkedhs &other){
+    this->clear();
+    if (other.capacity_ != capacity_){
+        delete[] arr_;
+        capacity_ = other.capacity_;
+        arr_ = new std::list<student>*[capacity_]();
     }
+    size_ = other.size_;
+    for (int i = 0; i < other.capacity_; i++){
+        if (other.arr_[i]){
+            arr_[i] = new std::list<student>;
+            for (auto it = other.arr_[i]->begin(); it != other.arr_[i]->end();it++){
+                student s(*it);
+                this->arr_[i]->push_back(s);
+            }
+        }
+    }
+    return *this;
+}
+
+linkedhs::~linkedhs() {
+    clear();
     delete[] arr_;
 }
+
+void linkedhs::swap(linkedhs &other){
+    int tmp = other.size_;
+    other.size_ = size_;
+    size_ = tmp;
+
+    tmp = other.capacity_;
+    other.capacity_ = capacity_;
+    capacity_ = tmp;
+
+    std::list<student> **tmparr = other.arr_;
+    other.arr_ = arr_;
+    arr_ = tmparr;
+}
+
 
 size_t linkedhs::size() const{
     return size_;
@@ -35,6 +68,16 @@ size_t linkedhs::size() const{
 
 bool linkedhs::empty() const{
     return size_==0;
+}
+
+bool linkedhs::contains(const element &e) const{
+    unsigned long long hash = e.hash();
+    if (arr_[hash] == nullptr) return false;
+    std::list<student> &list = *arr_[hash];
+    for (student &x : list){
+        if (x == e) return true;
+    }
+    return false;
 }
 
 bool linkedhs::insert(const element &e) {
@@ -65,4 +108,10 @@ bool linkedhs::remove(const element &e) {
     }
     return false;
     
+}
+
+void linkedhs::clear(){
+    for (int i = 0; i < capacity_ ; i++){
+        delete arr_[i];
+    }
 }
