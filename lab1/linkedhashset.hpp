@@ -20,11 +20,15 @@ public:
 
     bool contains(const element & e) const;
 
+    bool operator==(const linkedhs & other) const;
+    bool operator!=(const linkedhs & other) const;
+
+
 
     void clear();
 
 private:
-    static const int DEFAULT_CAPACITY = 512;
+    static const int DEFAULT_CAPACITY = 1;
     int capacity_;
     size_t size_;
     std::list<student> **arr_;

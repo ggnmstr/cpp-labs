@@ -110,6 +110,23 @@ bool linkedhs::remove(const element &e) {
     
 }
 
+bool linkedhs::operator==(const linkedhs &other) const{
+    if (capacity_ != other.capacity_ || size_ != other.size_) return false;
+    for (int i = 0; i < capacity_; i++){
+        if (arr_[i] != nullptr && other.arr_[i] == nullptr) return false;
+        if (arr_[i] == nullptr && other.arr_[i] == nullptr) continue;
+        std::list<student> &tlist = *arr_[i];
+        std::list<student> &olist = *other.arr_[i];
+        //todo : compare this 2 lists so they contain the same elements
+    }
+    return true;
+}
+
+bool linkedhs::operator!=(const linkedhs &other) const{
+    return !(*this == other);
+}
+
+
 void linkedhs::clear(){
     for (int i = 0; i < capacity_ ; i++){
         delete arr_[i];
