@@ -28,8 +28,8 @@ public:
     void clear();
 
 private:
-    static const int DEFAULT_CAPACITY = 1;
-    int capacity_;
+    static const size_t DEFAULT_CAPACITY = 1;
+    size_t capacity_;
     size_t size_;
     std::list<student> **arr_;
 };

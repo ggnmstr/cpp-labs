@@ -48,7 +48,7 @@ linkedhs::~linkedhs() {
 }
 
 void linkedhs::swap(linkedhs &other){
-    int tmp = other.size_;
+    size_t tmp = other.size_;
     other.size_ = size_;
     size_ = tmp;
 
