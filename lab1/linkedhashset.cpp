@@ -10,7 +10,7 @@ linkedhs::linkedhs(const linkedhs &other) :
         capacity_(other.capacity_),
         size_(other.size_),
         arr_(new std::list<student> *[capacity_]()) {
-    for (int i = 0; i < capacity_; i++) {
+    for (size_t i = 0; i < capacity_; i++) {
         if (other.arr_[i]) {
             arr_[i] = new std::list<student>;
             for (auto it = other.arr_[i]->begin(); it != other.arr_[i]->end(); it++) {
@@ -29,7 +29,7 @@ linkedhs &linkedhs::operator=(const linkedhs &other) {
         arr_ = new std::list<student> *[capacity_]();
     }
     size_ = other.size_;
-    for (int i = 0; i < other.capacity_; i++) {
+    for (size_t i = 0; i < other.capacity_; i++) {
         if (other.arr_[i]) {
             arr_[i] = new std::list<student>;
             for (auto it = other.arr_[i]->begin(); it != other.arr_[i]->end(); it++) {
@@ -103,7 +103,6 @@ bool linkedhs::remove(const element &e) {
     for (auto it = list->begin(); it != list->end(); ++it) {
         if (e == *it) {
             added_.remove(&(*it));
-            auto xx = &(*it);
             list->erase(it);
             size_--;
             return true;
@@ -116,11 +115,11 @@ bool linkedhs::remove(const element &e) {
 bool linkedhs::operator==(const linkedhs &other) const {
     if (capacity_ != other.capacity_ || size_ != other.size_) return false;
     //todo : rewrite the following code so it only uses iterator and contains()
-    for (int i = 0; i < capacity_; i++) {
+    for (size_t i = 0; i < capacity_; i++) {
         if (arr_[i] != nullptr && other.arr_[i] == nullptr) return false;
         if (arr_[i] == nullptr && other.arr_[i] == nullptr) continue;
-        std::list<student> &tlist = *arr_[i];
-        std::list<student> &olist = *other.arr_[i];
+        //std::list<student> &tlist = *arr_[i];
+        //std::list<student> &olist = *other.arr_[i];
         //todo : compare this 2 lists so they contain the same elements
     }
     return true;
@@ -132,7 +131,7 @@ bool linkedhs::operator!=(const linkedhs &other) const {
 
 
 void linkedhs::clear() {
-    for (int i = 0; i < capacity_; i++) {
+    for (size_t i = 0; i < capacity_; i++) {
         delete arr_[i];
     }
 }
