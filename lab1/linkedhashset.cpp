@@ -86,11 +86,11 @@ bool linkedhs::insert(const element &e) {
         arr_[hash] = new std::list<student>;
     }
     std::list<student> &s1 = *arr_[hash];
-    //const student ecopy(e);
+    //push_back creates the copy of e
     s1.push_back(e);
+    student *p = &s1.back();
     size_++;
-    //const student *p = &e;
-    //added_.push_back(p);
+    added_.push_back(p);
     return true;
 }
 
@@ -102,6 +102,8 @@ bool linkedhs::remove(const element &e) {
 
     for (auto it = list->begin(); it != list->end(); ++it) {
         if (e == *it) {
+            added_.remove(&(*it));
+            auto xx = &(*it);
             list->erase(it);
             size_--;
             return true;

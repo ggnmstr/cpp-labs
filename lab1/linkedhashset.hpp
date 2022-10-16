@@ -47,9 +47,9 @@ public:
     void clear();
 
 private:
-    static const size_t DEFAULT_CAPACITY = 1;
+    static const size_t DEFAULT_CAPACITY = 8;
     size_t capacity_;
     size_t size_;
     std::list<student> **arr_;
-    //std::list<student*> added_;
+    std::list<student*> added_;
 };
