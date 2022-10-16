@@ -1,8 +1,6 @@
 #include "student.hpp"
 
-student::student(unsigned age, std::string name) {
-    age_ = age;
-    name_ = name;
+student::student(unsigned age, std::string name):age_(age),name_(name) {
 }
 
 bool student::operator==(const student &other) const {
