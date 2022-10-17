@@ -1,5 +1,13 @@
 #include "linkedhashset.hpp"
 
+
+lhsnode::lhsnode(student element, lhsnode *next = nullptr, lhsnode *prev = nullptr) :
+        element_(element),
+        next_(next),
+        prev_(prev) {
+
+}
+
 linkedhs::linkedhs() :
         capacity_(DEFAULT_CAPACITY),
         size_(0),

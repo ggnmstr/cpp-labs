@@ -1,9 +1,21 @@
 #pragma once
 
 #include <list>
+#include "lhsnode.cpp"
 #include "student.hpp"
 
 typedef student element;
+
+// node of linkedhashset
+struct lhsnode{
+    student element_;
+    lhsnode *next_;
+    lhsnode *prev_;
+    lhsnode(student element, lhsnode *next, lhsnode *prev);
+};
+
+
+
 
 class linkedhs {
 public:
