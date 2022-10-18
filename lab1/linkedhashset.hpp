@@ -1,7 +1,6 @@
 #pragma once
 
 #include <list>
-#include "lhsnode.cpp"
 #include "student.hpp"
 
 typedef student element;
@@ -11,7 +10,7 @@ struct lhsnode{
     student element_;
     lhsnode *next_;
     lhsnode *prev_;
-    lhsnode(student element, lhsnode *next, lhsnode *prev);
+    lhsnode(student element, lhsnode *prev, lhsnode *next);
 };
 
 
@@ -62,6 +61,7 @@ private:
     static const size_t DEFAULT_CAPACITY = 8;
     size_t capacity_;
     size_t size_;
-    std::list<student> **arr_;
-    std::list<student*> added_;
+    std::list<lhsnode*> *arr_;
+    lhsnode *head_;
+    lhsnode *tail_;
 };

@@ -16,6 +16,5 @@ int main(){
     l1.insert(a2);
     l2.insert(a2c);
     l2.insert(a1c);
-    std::cout << (l1 == l2) << std::endl;
     return 0;
 }
