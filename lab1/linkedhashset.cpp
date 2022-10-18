@@ -120,6 +120,7 @@ bool linkedhs::contains(const element &e) const {
 }
 
 bool linkedhs::insert(const element &e) {
+    if (this->contains(e)) return false;
     unsigned long long hash = e.hash();
     hash %= capacity_;
 
