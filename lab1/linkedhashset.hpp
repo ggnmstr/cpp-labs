@@ -61,9 +61,9 @@ public:
 
     bool operator!=(const linkedhs &other) const;
 
-    iterator begin();
+    iterator begin() const;
 
-    iterator end();
+    iterator end() const;
 
     void clear();
 

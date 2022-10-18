@@ -158,13 +158,8 @@ bool linkedhs::remove(const element &e) {
 
 bool linkedhs::operator==(const linkedhs &other) const {
     if (capacity_ != other.capacity_ || size_ != other.size_) return false;
-    //todo : rewrite the following code so it only uses iterator and contains()
-    for (size_t i = 0; i < capacity_; i++) {
-        //if (arr_[i] != nullptr && other.arr_[i] == nullptr) return false;
-        //if (arr_[i] == nullptr && other.arr_[i] == nullptr) continue;
-        //std::list<student> &tlist = *arr_[i];
-        //std::list<student> &olist = *other.arr_[i];
-        //todo : compare this 2 lists so they contain the same elements
+    for (auto it = this->begin(); it != this->end(); it++){
+        if (!(other.contains(*it))) return false;
     }
     return true;
 }
@@ -173,7 +168,6 @@ bool linkedhs::operator!=(const linkedhs &other) const {
     return !(*this == other);
 }
 
-// todo: rewrite clear() using iterator (?)
 void linkedhs::clear() {
     for (size_t i = 0; i < capacity_; i++) {
         std::list<lhsnode*> &list = arr_[i];
@@ -188,11 +182,11 @@ void linkedhs::clear() {
 linkedhs::iterator::iterator(lhsnode *cur):cur_(cur){}
 
 
-linkedhs::iterator linkedhs::begin() {
+linkedhs::iterator linkedhs::begin() const {
     return iterator(this->head_);
 }
 
-linkedhs::iterator linkedhs::end() {
+linkedhs::iterator linkedhs::end() const {
     return iterator(nullptr);
 }
 
