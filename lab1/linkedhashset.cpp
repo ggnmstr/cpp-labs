@@ -176,9 +176,12 @@ bool linkedhs::operator!=(const linkedhs &other) const {
 // todo: rewrite clear() using iterator (?)
 void linkedhs::clear() {
     for (size_t i = 0; i < capacity_; i++) {
-        for (lhsnode *x: arr_[i]) {
+        std::list<lhsnode*> &list = arr_[i];
+        if (list.empty()) continue;
+        for (lhsnode *x: list) {
             delete x;
         }
+        list.clear();
     }
 }
 
