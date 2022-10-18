@@ -110,6 +110,7 @@ bool linkedhs::empty() const {
 
 bool linkedhs::contains(const element &e) const {
     unsigned long long hash = e.hash();
+    hash %= capacity_;
     if (arr_[hash].empty()) return false;
     std::list<lhsnode *> &list = arr_[hash];
     for (lhsnode *&x: list) {
