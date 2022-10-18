@@ -16,9 +16,9 @@ int main(){
     linkedhs l2;
 
     l1.insert(a1);
-    l2.insert(a1c);
     l1.insert(a2);
-    l2.insert(a3c);
+    l1.insert(a3);
+    l1.insert(a4);
     std::cout << (l1 == l2) << std::endl;
 
     return 0;

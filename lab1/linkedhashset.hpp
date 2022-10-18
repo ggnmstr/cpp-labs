@@ -67,8 +67,13 @@ public:
 
     void clear();
 
+
 private:
-    static const size_t DEFAULT_CAPACITY = 8;
+    void resize();
+
+    linkedhs(const linkedhs &other, size_t newcap);
+
+    static const size_t DEFAULT_CAPACITY = 128;
     size_t capacity_;
     size_t size_;
     std::list<lhsnode *> *arr_;

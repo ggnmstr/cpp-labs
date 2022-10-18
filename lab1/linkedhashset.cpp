@@ -41,6 +41,17 @@ linkedhs::linkedhs(const linkedhs &other) :
     }
 }
 
+linkedhs::linkedhs(const linkedhs &other, size_t newcap) :
+        capacity_(newcap),
+        size_(0),
+        arr_(new std::list<lhsnode *>[newcap]()) {
+    for (auto it = other.begin(); it != other.end(); it++) {
+        element e = (*it);
+        this->insert(e);
+    }
+}
+
+
 linkedhs &linkedhs::operator=(const linkedhs &other) {
     this->clear();
     if (other.capacity_ != capacity_) {
@@ -72,6 +83,7 @@ linkedhs &linkedhs::operator=(const linkedhs &other) {
     return *this;
 }
 
+
 linkedhs::~linkedhs() {
     clear();
     delete[] arr_;
@@ -99,6 +111,12 @@ void linkedhs::swap(linkedhs &other) {
     tail_ = tmplnd;
 }
 
+void linkedhs::resize() {
+    linkedhs newlhs(*this, capacity_*2);
+    clear();
+    swap(newlhs);
+}
+
 
 size_t linkedhs::size() const {
     return size_;
@@ -120,6 +138,7 @@ bool linkedhs::contains(const element &e) const {
 }
 
 bool linkedhs::insert(const element &e) {
+    if (size_ >= capacity_ / 2) resize();
     if (this->contains(e)) return false;
     unsigned long long hash = e.hash();
     hash %= capacity_;
@@ -159,7 +178,7 @@ bool linkedhs::remove(const element &e) {
 
 bool linkedhs::operator==(const linkedhs &other) const {
     if (capacity_ != other.capacity_ || size_ != other.size_) return false;
-    for (auto it = this->begin(); it != this->end(); it++){
+    for (auto it = this->begin(); it != this->end(); it++) {
         if (!(other.contains(*it))) return false;
     }
     return true;
@@ -171,7 +190,7 @@ bool linkedhs::operator!=(const linkedhs &other) const {
 
 void linkedhs::clear() {
     for (size_t i = 0; i < capacity_; i++) {
-        std::list<lhsnode*> &list = arr_[i];
+        std::list<lhsnode *> &list = arr_[i];
         if (list.empty()) continue;
         for (lhsnode *x: list) {
             delete x;
@@ -180,7 +199,7 @@ void linkedhs::clear() {
     }
 }
 
-linkedhs::iterator::iterator(lhsnode *cur):cur_(cur){}
+linkedhs::iterator::iterator(lhsnode *cur) : cur_(cur) {}
 
 
 linkedhs::iterator linkedhs::begin() const {
