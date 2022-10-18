@@ -13,7 +13,7 @@ int main(){
     // order of added elements effects opertor==, that's incorrect
     // should work on std::list<student> == std::list<student>
     l1.insert(a1);
-    l1.insert(a2);
+    l1.remove(a1);
     l2.insert(a2c);
     l2.insert(a1c);
     return 0;

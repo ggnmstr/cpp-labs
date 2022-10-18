@@ -121,13 +121,8 @@ bool linkedhs::contains(const element &e) const {
 bool linkedhs::insert(const element &e) {
     unsigned long long hash = e.hash();
     hash %= capacity_;
-    /*
-    if (arr_[hash] == nullptr) {
-        arr_[hash] = new std::list<student>;
-    }
-    */
+
     std::list<lhsnode *> &s1 = arr_[hash];
-    //push_back creates the copy of e
     lhsnode *newnode = new lhsnode(e, this->tail_);
     if (size_ == 0) {
         this->head_ = newnode;
@@ -140,22 +135,22 @@ bool linkedhs::insert(const element &e) {
     return true;
 }
 
-//todo: rewrite this
 bool linkedhs::remove(const element &e) {
-    /*
     unsigned long long hash = e.hash();
     hash %= capacity_;
-    std::list<student> *list = arr_[hash];
+    std::list<lhsnode *> &list = arr_[hash];
 
-
-    for (auto it = list->begin(); it != list->end(); ++it) {
-        if (e == *it) {
-            list->erase(it);
+    for (auto it = list.begin(); it != list.end(); ++it) {
+        if (e == (*it)->element_) {
+            lhsnode *cur = (*it);
+            if (cur->prev_ != nullptr) cur->prev_->next_ = cur->next_;
+            if (cur->next_ != nullptr) cur->next_->prev_ = cur->prev_;
+            list.erase(it);
+            delete cur;
             size_--;
             return true;
         }
     }
-    */
     return false;
 
 }
