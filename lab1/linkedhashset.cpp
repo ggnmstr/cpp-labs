@@ -181,3 +181,36 @@ void linkedhs::clear() {
         }
     }
 }
+
+linkedhs::iterator::iterator(lhsnode *cur):cur_(cur){}
+
+
+linkedhs::iterator linkedhs::begin() {
+    return iterator(this->head_);
+}
+
+linkedhs::iterator linkedhs::end() {
+    return iterator(nullptr);
+}
+
+element linkedhs::iterator::operator*() {
+    return cur_->element_;
+}
+
+linkedhs::iterator linkedhs::iterator::operator--() {
+    cur_ = cur_->prev_;
+    return *this;
+}
+
+linkedhs::iterator linkedhs::iterator::operator++(int) {
+    cur_ = cur_->next_;
+    return *this;
+}
+
+bool linkedhs::iterator::operator==(const linkedhs::iterator &other) const {
+    return cur_ == other.cur_;
+}
+
+bool linkedhs::iterator::operator!=(const linkedhs::iterator &other) const {
+    return !(*this == other);
+}

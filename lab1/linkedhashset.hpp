@@ -6,26 +6,33 @@
 typedef student element;
 
 // node of linkedhashset
-struct lhsnode{
+struct lhsnode {
     student element_;
     lhsnode *next_;
     lhsnode *prev_;
+
     lhsnode(student element, lhsnode *prev, lhsnode *next);
 };
-
-
 
 
 class linkedhs {
 public:
     class iterator {
     public:
+        iterator(lhsnode *cur);
+
         element operator*();
+
         iterator operator++(int);
+
         iterator operator--();
+
         bool operator==(const iterator &other) const;
+
         bool operator!=(const iterator &other) const;
+
     private:
+        lhsnode *cur_;
 
     };
 
@@ -54,6 +61,9 @@ public:
 
     bool operator!=(const linkedhs &other) const;
 
+    iterator begin();
+
+    iterator end();
 
     void clear();
 
@@ -61,7 +71,7 @@ private:
     static const size_t DEFAULT_CAPACITY = 8;
     size_t capacity_;
     size_t size_;
-    std::list<lhsnode*> *arr_;
+    std::list<lhsnode *> *arr_;
     lhsnode *head_;
     lhsnode *tail_;
 };
