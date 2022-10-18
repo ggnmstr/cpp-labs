@@ -57,6 +57,9 @@ public:
 
     bool contains(const element &e) const;
 
+    iterator find(const element &e) const;
+
+
     bool operator==(const linkedhs &other) const;
 
     bool operator!=(const linkedhs &other) const;

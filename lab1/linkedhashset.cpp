@@ -137,6 +137,14 @@ bool linkedhs::contains(const element &e) const {
     return false;
 }
 
+linkedhs::iterator linkedhs::find(const element &e) const {
+    unsigned long long hash = e.hash() % capacity_;
+    std::list<lhsnode*> &list = arr_[hash];
+    for (lhsnode* x : list){
+        if (x->element_ == e) return iterator(x);
+    }
+}
+
 bool linkedhs::insert(const element &e) {
     if (size_ >= capacity_ / 2) resize();
     if (this->contains(e)) return false;
