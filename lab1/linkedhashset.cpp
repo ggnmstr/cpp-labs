@@ -143,6 +143,7 @@ linkedhs::iterator linkedhs::find(const element &e) const {
     for (lhsnode* x : list){
         if (x->element_ == e) return iterator(x);
     }
+    return iterator(nullptr);
 }
 
 bool linkedhs::insert(const element &e) {
