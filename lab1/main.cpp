@@ -12,14 +12,21 @@ int main(){
     student a4(20,"Misha");
     student a5(22, "Katya");
     student a6(16,"Gennady");
-    linkedhs l1;
-    linkedhs l2;
-
-    l1.insert(a1);
-    l1.insert(a2);
-    l1.insert(a3);
-    l1.insert(a4);
-    std::cout << (l1 == l2) << std::endl;
-
+    linkedhs lhs1;
+    lhs1.insert(a1);
+    lhs1.insert(a2);
+    lhs1.insert(a3);
+    lhs1.insert(a4);
+    lhs1.insert(a5);
+    lhs1.insert(a6);
+    linkedhs::iterator it = lhs1.find(a3);
+    std::cout << a3.hash() << std::endl;
+    std::cout << (*it).hash() << std::endl;
+    it++;
+    std::cout << a4.hash() << std::endl;
+    std::cout << (*it).hash() << std::endl;
+    --it;
+    std::cout << a3.hash() << std::endl;
+    std::cout << (*it).hash() << std::endl;
     return 0;
 }

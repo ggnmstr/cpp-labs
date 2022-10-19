@@ -228,8 +228,9 @@ linkedhs::iterator linkedhs::iterator::operator--() {
 }
 
 linkedhs::iterator linkedhs::iterator::operator++(int) {
+    linkedhs::iterator it(*this);
     cur_ = cur_->next_;
-    return *this;
+    return it;
 }
 
 bool linkedhs::iterator::operator==(const linkedhs::iterator &other) const {
