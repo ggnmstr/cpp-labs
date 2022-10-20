@@ -53,6 +53,7 @@ linkedhs::linkedhs(const linkedhs &other, size_t newcap) :
 
 
 linkedhs &linkedhs::operator=(const linkedhs &other) {
+    if (&other == this) return *this;
     this->clear();
     if (other.capacity_ != capacity_) {
         delete[] arr_;
