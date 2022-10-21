@@ -266,5 +266,5 @@ TEST(IteratorTest,EqOperator){
     auto it1 = l1.find(sf);
     auto it2 = l1.begin();
     for (int i = 0; i < 10; i++) it2++;
-    ASSERT_EQ(it1,it2);
+    ASSERT_TRUE(it1==it2);
 }
