@@ -23,9 +23,13 @@ public:
 
         element operator*();
 
+        iterator& operator++();
+
         iterator operator++(int);
 
-        iterator operator--();
+        iterator& operator--();
+
+        iterator operator--(int);
 
         bool operator==(const iterator &other) const;
 

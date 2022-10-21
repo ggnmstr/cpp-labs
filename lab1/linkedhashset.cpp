@@ -242,8 +242,21 @@ element linkedhs::iterator::operator*() {
 }
 
 // prefix operartor--, iterator will point to element added before element it was pointing at
-linkedhs::iterator linkedhs::iterator::operator--() {
+linkedhs::iterator& linkedhs::iterator::operator--() {
     cur_ = cur_->prev_;
+    return *this;
+}
+
+// postfix operartor--, iterator will point to element added before element it was pointing at
+linkedhs::iterator linkedhs::iterator::operator--(int) {
+    linkedhs::iterator it(*this);
+    cur_ = cur_->prev_;
+    return it;
+}
+
+// prefix operator++, iterator will point to element added after element it was pointing at
+linkedhs::iterator& linkedhs::iterator::operator++() {
+    cur_ = cur_->next_;
     return *this;
 }
 
