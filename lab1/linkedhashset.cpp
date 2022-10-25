@@ -1,7 +1,7 @@
 #include "linkedhashset.hpp"
 
 // constructor of lhsnode (node of linkedhs)
-lhsnode::lhsnode(student element, lhsnode *prev = nullptr, lhsnode *next = nullptr) :
+explicit lhsnode::lhsnode(student element, lhsnode *prev = nullptr, lhsnode *next = nullptr) :
         element_(element),
         next_(next),
         prev_(prev) {
@@ -22,6 +22,7 @@ linkedhs::linkedhs(const linkedhs &other) :
         capacity_(other.capacity_),
         size_(other.size_),
         arr_(new std::list<lhsnode *>[capacity_]()) {
+    // CR: replace with insert
     for (size_t i = 0; i < capacity_; i++) {
         int c = 0;
         if (!(other.arr_[i].empty())) {
@@ -50,7 +51,7 @@ linkedhs::linkedhs(const linkedhs &other, size_t newcap) :
         size_(0),
         arr_(new std::list<lhsnode *>[newcap]()) {
     for (auto it = other.begin(); it != other.end(); it++) {
-        element e = (*it);
+        element e = *it;
         this->insert(e);
     }
 }
@@ -61,10 +62,12 @@ linkedhs &linkedhs::operator=(const linkedhs &other) {
     this->clear();
     if (other.capacity_ != capacity_) {
         delete[] arr_;
+        // CR: do not preserve capacity_
         capacity_ = other.capacity_;
         arr_ = new std::list<lhsnode *>[capacity_]();
     }
     size_ = other.size_;
+    // CR: merge logic with copy ctor
     for (size_t i = 0; i < other.capacity_; i++) {
         int c = 0;
         if (!(other.arr_[i].empty())) {
@@ -132,16 +135,9 @@ bool linkedhs::empty() const {
     return size_ == 0;
 }
 
-// returns 1 if element e exists in lhs
+// returns true if element e exists in lhs
 bool linkedhs::contains(const element &e) const {
-    unsigned long long hash = e.hash();
-    hash %= capacity_;
-    if (arr_[hash].empty()) return false;
-    std::list<lhsnode *> &list = arr_[hash];
-    for (lhsnode *&x: list) {
-        if (x->element_ == e) return true;
-    }
-    return false;
+    return find(e) != end();
 }
 
 // returns iterator pointing to element e
@@ -151,20 +147,21 @@ linkedhs::iterator linkedhs::find(const element &e) const {
     for (lhsnode* x : list){
         if (x->element_ == e) return iterator(x);
     }
-    return iterator(nullptr);
+    return end();
 }
 
 // inserts element e inside linkedhs 
 // returns false in case of failure (element already exists)
 bool linkedhs::insert(const element &e) {
-    if (size_ >= capacity_ / 2) resize();
     if (this->contains(e)) return false;
+    if (size_ >= capacity_ / 2) resize();
     unsigned long long hash = e.hash();
     hash %= capacity_;
 
     std::list<lhsnode *> &s1 = arr_[hash];
     lhsnode *newnode = new lhsnode(e, this->tail_);
     if (size_ == 0) {
+        assert(this->head_ == nullptr);
         this->head_ = newnode;
     } else {
         this->tail_->next_ = newnode;
@@ -213,7 +210,9 @@ bool linkedhs::operator!=(const linkedhs &other) const {
 
 // frees all allocated memory and empties all lhs' lists
 void linkedhs::clear() {
+  // CR: clear head, tail, size_ (add test)
     for (size_t i = 0; i < capacity_; i++) {
+      // CR: optimize using size_
         std::list<lhsnode *> &list = arr_[i];
         if (list.empty()) continue;
         for (lhsnode *x: list) {
@@ -222,6 +221,8 @@ void linkedhs::clear() {
         list.clear();
     }
 }
+
+// iterator
 
 // iterator constructor
 linkedhs::iterator::iterator(lhsnode *cur) : cur_(cur) {}

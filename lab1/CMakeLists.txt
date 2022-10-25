@@ -10,6 +10,7 @@ add_executable(Lab1 main.cpp linkedhashset.cpp student.cpp)
 
 add_executable(linkedhs_test linkedhashset.cpp lhstest.cpp student.cpp)
 
+# CR: remove line, check if options are still there
 add_compile_options(-Wall -Wpedantic -Werror -g)
 
 include(FetchContent)
@@ -23,6 +24,7 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 SET(WARN_FLAGS "-Wall -Wpedantic -Wextra")
+# CR: https://github.com/google/sanitizers/wiki/AddressSanitizerLeakSanitizer
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${WARN_FLAGS} ${ASAN_OPTIONS}") 
 
 enable_testing()

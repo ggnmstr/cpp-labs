@@ -83,6 +83,7 @@ TEST(RemoveTest,NonExistent){
     student s2(21,"Name1");
     l1.insert(s1);
     ASSERT_FALSE(l1.remove(s2));
+    // CR: check size, contains
 }
 
 TEST(RemoveTest,Many){
@@ -98,7 +99,6 @@ TEST(RemoveTest,Many){
     ASSERT_EQ(l1.size(),1);
     student s2(0,"Name"+0);
     ASSERT_TRUE(l1.contains(s2));
-    student s1(20, "Name");
 }
 
 TEST(SwapTest,Empty){
@@ -168,6 +168,7 @@ TEST(ContainsTest,NonExistent){
     ASSERT_FALSE(l1.contains(s2));
 }
 
+// CR: check equality properties
 TEST(OperatorEqTest,Empty){
     linkedhs l1;
     linkedhs l2;
@@ -205,6 +206,7 @@ TEST(ClearTest,Many){
     linkedhs l1;
     for (int i = 0; i < 512; i++){
         student s1(i,"NameXXX"+i);
+        l1.insert(s1);
     }
     l1.clear();
     ASSERT_EQ(l1.size(),0);
@@ -217,6 +219,7 @@ TEST(IteratorTest,Empty){
     ASSERT_EQ(l1.begin(),l1.end());
 }
 
+// CR: add element, remove element, add new element, check that new element is the beginning
 TEST(IteratorTest,Begin){
     linkedhs l1;
     for (int i = 0; i < 512; i++){

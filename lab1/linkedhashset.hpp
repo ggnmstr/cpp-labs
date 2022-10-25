@@ -6,6 +6,7 @@
 typedef student element;
 
 // node of linkedhashset
+// CR: move to private section of linkedhs class
 struct lhsnode {
     student element_;
     lhsnode *next_;
@@ -14,10 +15,15 @@ struct lhsnode {
     lhsnode(student element, lhsnode *prev, lhsnode *next);
 };
 
-
+// CR:
+/*
+1. definition in header
+2. hasher
+template<class T, class Hasher = std::hash<T>>
+*/
 class linkedhs {
 public:
-    class iterator {
+      class iterator {
     public:
         iterator(lhsnode *cur);
 
@@ -52,7 +58,8 @@ public:
     bool insert(const element &e);
 
     bool remove(const element &e);
-
+    
+    // swaps everything between 2 linkedhs'
     void swap(linkedhs &other);
 
     size_t size() const;
@@ -81,9 +88,11 @@ private:
     linkedhs(const linkedhs &other, size_t newcap);
 
     static const size_t DEFAULT_CAPACITY = 128;
+    // CR: static constexpr double RESIZE_COEF = 0.75
     size_t capacity_;
     size_t size_;
-    std::list<lhsnode *> *arr_;
+    // CR: store pointers to lists
+      std::list<lhsnode *> *arr_;
     lhsnode *head_;
     lhsnode *tail_;
 };
