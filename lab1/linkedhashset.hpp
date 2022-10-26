@@ -119,6 +119,9 @@ private:
     // private resize to 2*current capacity 
     void resize();
 
+    // this clean method doesn't delete pointers to std::list<lhsnode*>
+    void cleanl();
+
     // specific private copy constructor used for easier resizing 
     linkedhs(const linkedhs &other, size_t newcap);
 
@@ -129,7 +132,7 @@ private:
     size_t capacity_;
     size_t size_;
     // CR: store pointers to lists
-    std::list<lhsnode *> *arr_;
+    std::list<lhsnode *> **arr_;
     lhsnode *head_;
     lhsnode *tail_;
 };
