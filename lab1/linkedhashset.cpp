@@ -127,6 +127,12 @@ bool linkedhs::remove(const element &e) {
     for (auto it = list.begin(); it != list.end(); ++it) {
         if (e == (*it)->element_) {
             lhsnode *cur = (*it);
+            if ( cur == tail_){
+                tail_ = cur->prev_;
+            }
+            if ( cur == head_){
+                head_ = cur->next_;
+            }
             if (cur->prev_ != nullptr) cur->prev_->next_ = cur->next_;
             if (cur->next_ != nullptr) cur->next_->prev_ = cur->prev_;
             list.erase(it);

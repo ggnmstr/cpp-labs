@@ -123,6 +123,17 @@ TEST(SwapTest, Different) {
     ASSERT_EQ(l2, c1);
 }
 
+TEST(SwapTest,EmptyWNonEmpty){
+    linkedhs l1; 
+    linkedhs l2;
+    student s2(12,"MooMoo");
+    l2.insert(s2);
+    l2.swap(l1);
+    ASSERT_TRUE(l2.empty());
+    ASSERT_NE(l1,l2);
+    ASSERT_EQ(l1.size(),1);
+}
+
 TEST(SwapTest, Many) {
     linkedhs l1;
     linkedhs l2;
@@ -271,3 +282,19 @@ TEST(IteratorTest, EqOperator) {
     for (int i = 0; i < 10; i++) it2++;
     ASSERT_TRUE(it1 == it2);
 }
+
+TEST(IteratorTest, HeadCheck){
+    linkedhs l1;
+    student s1(12,"ABC");
+    l1.insert(s1);
+    ASSERT_EQ(*l1.begin(),s1);
+    ASSERT_NE(l1.begin(),l1.end());
+    l1.remove(s1);
+    ASSERT_EQ(l1.begin(),nullptr);
+    ASSERT_EQ(l1.end(),nullptr);
+    ASSERT_TRUE(l1.empty());
+    student s2(123,"LOL");
+    l1.insert(s2);
+    ASSERT_EQ(*l1.begin(),s2);
+}
+
