@@ -5,22 +5,6 @@
 
 typedef student element;
 
-// node of linkedhashset
-// CR: move to private section of linkedhs class
-struct lhsnode {
-    student element_;
-    lhsnode *next_;
-    lhsnode *prev_;
-
-    // constructor of lhsnode (node of linkedhs)
-    explicit lhsnode(student element, lhsnode *prev = nullptr, lhsnode *next = nullptr) :
-            element_(element),
-            next_(next),
-            prev_(prev) {
-
-    }
-};
-
 // CR:
 /*
 1. definition in header
@@ -28,6 +12,8 @@ struct lhsnode {
 template<class T, class Hasher = std::hash<T>>
 */
 class linkedhs {
+private:
+    struct lhsnode;
 public:
     class iterator {
     public:
@@ -56,8 +42,7 @@ public:
         bool operator!=(const iterator &other) const;
 
     private:
-
-        lhsnode *cur_;
+        linkedhs::lhsnode *cur_;
     };
 
     // linkedhs default constructor
@@ -112,6 +97,26 @@ public:
 
 
 private:
+
+
+    // node of linkedhashset
+    // CR: move to private section of linkedhs class
+    struct lhsnode {
+    student element_;
+    lhsnode *next_;
+    lhsnode *prev_;
+
+    // constructor of lhsnode (node of linkedhs)
+    explicit lhsnode(student element, lhsnode *prev = nullptr, lhsnode *next = nullptr) :
+            element_(element),
+            next_(next),
+            prev_(prev) {
+
+        }
+    };
+
+    friend linkedhs::iterator;
+
     // private resize to 2*current capacity 
     void resize();
 
@@ -121,7 +126,7 @@ private:
     static constexpr double RESIZE_FACTOR = 0.75;
 
     static const size_t DEFAULT_CAPACITY = 128;
-    // CR: static constexpr double RESIZE_COEF = 0.75
+
     size_t capacity_;
     size_t size_;
     // CR: store pointers to lists
