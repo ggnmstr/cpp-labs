@@ -83,7 +83,10 @@ TEST(RemoveTest, NonExistent) {
     student s2(21, "Name1");
     l1.insert(s1);
     ASSERT_FALSE(l1.remove(s2));
-    // CR: check size, contains
+    l1.remove(s1);
+    ASSERT_EQ(l1.size(),0);
+    ASSERT_FALSE(l1.contains(s1));
+    ASSERT_FALSE(l1.contains(s2));
 }
 
 TEST(RemoveTest, Many) {
@@ -223,6 +226,14 @@ TEST(OperatorEqTest, Transitivity){
     ASSERT_TRUE(l1 == l2);
     ASSERT_TRUE(l2 == l3);
     ASSERT_TRUE(l3 == l1);
+}
+
+TEST(OperatorNEqTest, NonEqual){
+    linkedhs l1;
+    linkedhs l2;
+    student s1(123,"ASDASD");
+    l1.insert(s1);
+    ASSERT_TRUE(l1 != l2);
 }
 
 TEST(ClearTest, Empty) {
