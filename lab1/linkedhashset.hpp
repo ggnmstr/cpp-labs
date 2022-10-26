@@ -98,7 +98,6 @@ public:
 
 private:
 
-
     // node of linkedhashset
     // CR: move to private section of linkedhs class
     struct lhsnode {
