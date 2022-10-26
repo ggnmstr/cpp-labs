@@ -206,6 +206,25 @@ TEST(OperatorEqTest, NonEqual) {
     ASSERT_FALSE(l1 == l2);
 }
 
+TEST(OperatorEqTest, Reflex) {
+    linkedhs l1;
+    student s1(1337, "1337");
+    student s2(7331, "7331");
+    l1.insert(s1);
+    l1.insert(s2);
+    ASSERT_TRUE(l1 == l1);
+}
+
+TEST(OperatorEqTest, Transitivity){
+    linkedhs l1;
+    student s1(44,"80085");
+    linkedhs l2(l1);
+    linkedhs l3 = l1;
+    ASSERT_TRUE(l1 == l2);
+    ASSERT_TRUE(l2 == l3);
+    ASSERT_TRUE(l3 == l1);
+}
+
 TEST(ClearTest, Empty) {
     linkedhs l1;
     l1.clear();
