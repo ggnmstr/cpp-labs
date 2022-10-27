@@ -133,3 +133,5 @@ private:
     lhsnode *head_;
     lhsnode *tail_;
 };
+
+#include "linkedhashset.hpp"
