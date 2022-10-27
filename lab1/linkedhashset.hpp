@@ -1,138 +1,263 @@
-#pragma once
+#include "linkedhashset.h"
+#include <cassert>
 
-#include <list>
-#include "student.hpp"
+template<class T, class Hasher>
+linkedhs<T,Hasher>::linkedhs() :
+        capacity_(DEFAULT_CAPACITY),
+        size_(0),
+        arr_(new std::list<lhsnode *>*[capacity_]()),
+        head_(nullptr),
+        tail_(nullptr) {
+}
 
-typedef student element;
+template<class T, class Hasher>
+linkedhs<T,Hasher>::linkedhs(const linkedhs<T,Hasher> &other) :
+        capacity_(other.size_ >= DEFAULT_CAPACITY * 0.5 ? other.capacity_ : DEFAULT_CAPACITY),
+        size_(0),
+        arr_(new std::list<lhsnode *>*[capacity_]()),
+        head_(nullptr),
+        tail_(nullptr) {
+    // CR: replace with insert
+    for (auto it = other.begin(); it != other.end(); it++) {
+        T e = *it;
+        this->insert(e);
+    }
+}
 
-// CR:
-/*
-1. definition in header
-2. hasher
-template<class T, class Hasher = std::hash<T>>
-*/
-class linkedhs {
-private:
-    struct lhsnode;
-public:
-    class iterator {
-    public:
-        // iterator constructor
-        iterator(lhsnode *cur);
+template<class T, class Hasher>
+linkedhs<T,Hasher>::linkedhs(const linkedhs<T,Hasher> &other, size_t newcap) :
+        capacity_(newcap),
+        size_(0),
+        arr_(new std::list<lhsnode *>*[newcap]()),
+        head_(nullptr),
+        tail_(nullptr) {
+    for (auto it = other.begin(); it != other.end(); it++) {
+        T e = *it;
+        this->insert(e);
+    }
+}
 
-        // returns element of lhsnode
-        element operator*();
+template<class T, class Hasher>
+linkedhs<T,Hasher> &linkedhs<T,Hasher>::operator=(const linkedhs<T,Hasher> &other) {
+    if (&other == this) return *this;
+    this->clear();
+    linkedhs<T,Hasher> lcp(other);
+    this->swap(lcp);
+    return *this;
+}
 
-        // prefix operator++, iterator will point to element added after element it was pointing at
-        iterator &operator++();
+template<class T, class Hasher>
+linkedhs<T,Hasher>::~linkedhs() {
+    clear();
+    delete[] arr_;
+}
 
-        // postfix operator++, iterator will point to element added after element it was pointing at
-        iterator operator++(int);
+template<class T, class Hasher>
+void linkedhs<T,Hasher>::swap(linkedhs<T,Hasher> &other) {
+    size_t tmp = other.size_;
+    other.size_ = size_;
+    size_ = tmp;
 
-        // prefix operartor--, iterator will point to element added before element it was pointing at
-        iterator &operator--();
+    tmp = other.capacity_;
+    other.capacity_ = capacity_;
+    capacity_ = tmp;
 
-        // postfix operartor--, iterator will point to element added before element it was pointing at
-        iterator operator--(int);
+    std::list<lhsnode *> **tmparr = other.arr_;
+    other.arr_ = arr_;
+    arr_ = tmparr;
 
-        // compares if 2 iterators point at the same element (same address in memory)
-        bool operator==(const iterator &other) const;
+    lhsnode *tmplnd = other.head_;
+    other.head_ = head_;
+    head_ = tmplnd;
 
-        // reverse of ==
-        bool operator!=(const iterator &other) const;
+    tmplnd = other.tail_;
+    other.tail_ = tail_;
+    tail_ = tmplnd;
+}
 
-    private:
-        linkedhs::lhsnode *cur_;
-    };
+template<class T, class Hasher>
+void linkedhs<T,Hasher>::resize() {
+    linkedhs<T,Hasher> newlhs(*this, capacity_ * 2);
+    cleanl();
+    swap(newlhs);
+}
 
-    // linkedhs default constructor
-    linkedhs();
+template<class T, class Hasher>
+size_t linkedhs<T,Hasher>::size() const {
+    return size_;
+}
 
-    // linkedhs copy constructor
-    linkedhs(const linkedhs &other);
+template<class T, class Hasher>
+bool linkedhs<T,Hasher>::empty() const {
+    return size_ == 0;
+}
 
-    // destructor frees all memory allocated and empties lhs' lists
-    ~linkedhs();
+template<class T, class Hasher>
+bool linkedhs<T,Hasher>::contains(const T &e) const {
+    return find(e) != end();
+}
 
-    // operator= 
-    linkedhs &operator=(const linkedhs &other);
-
-    // inserts element e inside linkedhs 
-    // returns false in case of failure (element already exists)
-    bool insert(const element &e);
-
-    // removes element e from lhs 
-    // returns false in case of failure (element not found)
-    bool remove(const element &e);
-
-    // swaps everything between 2 linkedhs'
-    void swap(linkedhs &other);
-
-    // returns amount of elements added to linkedhs
-    size_t size() const;
-
-    // returns true if no elements were added (otherwise false)
-    bool empty() const;
-
-    // returns true if element e exists in lhs
-    bool contains(const element &e) const;
-
-    // returns iterator pointing to element e
-    iterator find(const element &e) const;
-
-    // comparison of every element in lhs (and also size_)
-    bool operator==(const linkedhs &other) const;
-
-    // reverse of ==
-    bool operator!=(const linkedhs &other) const;
-
-    // returns iterator pointing to first element added to lhs
-    iterator begin() const;
-
-    // returns iterator pointing to nullptr (after last element)
-    iterator end() const;
-
-    // frees all allocated memory and empties all lhs' lists
-    void clear();
+template<class T, class Hasher>
+linkedhs<T,Hasher>::iterator linkedhs<T,Hasher>::find(const T &e) const {
+    unsigned long long hash = e.hash() % capacity_;
+    std::list<lhsnode *> *list = arr_[hash];
+    if (list == nullptr) return end();
+    for (lhsnode *x: *list) {
+        if (x->element_ == e) return iterator(x);
+    }
+    return end();
+}
 
 
-private:
+template<class T, class Hasher>
+bool linkedhs<T,Hasher>::insert(const T &e) {
+    if (this->contains(e)) return false;
+    if (size_ >= capacity_ * RESIZE_FACTOR) resize();
+    unsigned long long hash = e.hash();
+    hash %= capacity_;
+    if (arr_[hash] == nullptr){
+        arr_[hash] = new std::list<lhsnode*>;
+    }
+    std::list<lhsnode *> *s1 = arr_[hash];
+    lhsnode *newnode = new lhsnode(e, this->tail_);
+    if (size_ == 0) {
+        assert(this->head_ == nullptr);
+        this->head_ = newnode;
+    } else {
+        this->tail_->next_ = newnode;
+    }
+    this->tail_ = newnode;
+    s1->push_back(newnode);
+    size_++;
+    return true;
+}
 
-    // node of linkedhashset
-    // CR: move to private section of linkedhs class
-    struct lhsnode {
-    student element_;
-    lhsnode *next_;
-    lhsnode *prev_;
+template<class T, class Hasher>
+bool linkedhs<T,Hasher>::remove(const T &e) {
+    unsigned long long hash = e.hash();
+    hash %= capacity_;
+    std::list<lhsnode *> *list = arr_[hash];
+    if (list == nullptr) return false;
 
-    // constructor of lhsnode (node of linkedhs)
-    explicit lhsnode(student element, lhsnode *prev = nullptr, lhsnode *next = nullptr) :
-            element_(element),
-            next_(next),
-            prev_(prev) {
-
+    for (auto it = list->begin(); it != list->end(); ++it) {
+        if (e == (*it)->element_) {
+            lhsnode *cur = (*it);
+            if ( cur == tail_){
+                tail_ = cur->prev_;
+            }
+            if ( cur == head_){
+                head_ = cur->next_;
+            }
+            if (cur->prev_ != nullptr) cur->prev_->next_ = cur->next_;
+            if (cur->next_ != nullptr) cur->next_->prev_ = cur->prev_;
+            list->erase(it);
+            delete cur;
+            size_--;
+            return true;
         }
-    };
+    }
+    return false;
 
-    friend linkedhs::iterator;
+}
 
-    // private resize to 2*current capacity 
-    void resize();
+template<class T, class Hasher>
+bool linkedhs<T,Hasher>::operator==(const linkedhs<T,Hasher> &other) const {
+    if (size_ != other.size_) return false;
+    for (auto it = this->begin(); it != this->end(); it++) {
+        if (!(other.contains(*it))) return false;
+    }
+    return true;
+}
 
-    // this clean method doesn't delete pointers to std::list<lhsnode*>
-    void cleanl();
+template<class T, class Hasher>
+bool linkedhs<T,Hasher>::operator!=(const linkedhs<T,Hasher> &other) const {
+    return !(*this == other);
+}
 
-    // specific private copy constructor used for easier resizing 
-    linkedhs(const linkedhs &other, size_t newcap);
+template<class T, class Hasher>
+void linkedhs<T,Hasher>::clear() {
+    cleanl();
+    for (size_t i = 0; i < capacity_; i++){
+        std::list<lhsnode *> *list = arr_[i];
+        if (list == nullptr) continue;
+        delete list;
+        arr_[i] = nullptr;
+    }
+    //head_ = nullptr;
+    //tail_ = nullptr;
+    //assert(size_ == 0);
+}
 
-    static constexpr double RESIZE_FACTOR = 0.75;
+template<class T, class Hasher>
+void linkedhs<T,Hasher>::cleanl() {
+    for (size_t i = 0; i < capacity_; i++) {
+        if (size_ == 0) break;
+        std::list<lhsnode *> *list = arr_[i];
+        if (list == nullptr) continue;
+        for (lhsnode *x: *list) {
+            delete x;
+            size_--;
+        }
+        list->clear();
 
-    static const size_t DEFAULT_CAPACITY = 128;
+    }
+    head_ = nullptr;
+    tail_ = nullptr;
+    assert(size_ == 0);
+}
 
-    size_t capacity_;
-    size_t size_;
-    // CR: store pointers to lists
-    std::list<lhsnode *> **arr_;
-    lhsnode *head_;
-    lhsnode *tail_;
-};
+
+// iterator
+template<class T, class Hasher>
+linkedhs<T,Hasher>::iterator::iterator(lhsnode *cur) : cur_(cur) {}
+
+template<class T, class Hasher>
+linkedhs<T,Hasher>::iterator linkedhs<T,Hasher>::begin() const {
+    return iterator(this->head_);
+}
+
+template<class T, class Hasher>
+linkedhs<T,Hasher>::iterator linkedhs<T,Hasher>::end() const {
+    return iterator(nullptr);
+}
+
+template<class T, class Hasher>
+T linkedhs<T,Hasher>::iterator::operator*() {
+    return cur_->element_;
+}
+
+template<class T, class Hasher>
+linkedhs<T,Hasher>::iterator &linkedhs<T,Hasher>::iterator::operator--() {
+    cur_ = cur_->prev_;
+    return *this;
+}
+
+template<class T, class Hasher>
+linkedhs<T,Hasher>::iterator linkedhs<T,Hasher>::iterator::operator--(int) {
+    linkedhs<T,Hasher>::iterator it(*this);
+    cur_ = cur_->prev_;
+    return it;
+}
+
+template<class T, class Hasher>
+linkedhs<T,Hasher>::iterator &linkedhs<T,Hasher>::iterator::operator++() {
+    cur_ = cur_->next_;
+    return *this;
+}
+
+template<class T, class Hasher>
+linkedhs<T,Hasher>::iterator linkedhs<T,Hasher>::iterator::operator++(int) {
+    linkedhs<T,Hasher>::iterator it(*this);
+    cur_ = cur_->next_;
+    return it;
+}
+
+template<class T, class Hasher>
+bool linkedhs<T,Hasher>::iterator::operator==(const linkedhs<T,Hasher>::iterator &other) const {
+    return cur_ == other.cur_;
+}
+
+template<class T, class Hasher>
+bool linkedhs<T,Hasher>::iterator::operator!=(const linkedhs<T,Hasher>::iterator &other) const {
+    return !(*this == other);
+}
