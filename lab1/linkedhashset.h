@@ -1,12 +1,6 @@
 #include <list>
 #include <functional>
 
-// CR:
-/*
-1. definition in header
-2. hasher
-template<class T, class Hasher = std::hash<T>>
-*/
 template<class T, class Hasher = std::hash<T>>
 class linkedhs {
 private:
@@ -96,7 +90,6 @@ public:
 private:
 
     // node of linkedhashset
-    // CR: move to private section of linkedhs class
     struct lhsnode {
         T element_;
         lhsnode *next_;
@@ -128,7 +121,7 @@ private:
 
     size_t capacity_;
     size_t size_;
-    // CR: store pointers to lists
+    
     std::list<lhsnode *> **arr_;
     lhsnode *head_;
     lhsnode *tail_;

@@ -261,7 +261,6 @@ TEST(IteratorTest, Empty) {
     ASSERT_EQ(l1.begin(), l1.end());
 }
 
-// CR: add element, remove element, add new element, check that new element is the beginning
 TEST(IteratorTest, Begin) {
     linkedhs<student,studentHasher> l1;
     for (int i = 0; i < 512; i++) {

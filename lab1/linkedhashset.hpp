@@ -16,7 +16,6 @@ linkedhs<T,Hasher>::linkedhs(const linkedhs<T,Hasher> &other) :
         arr_(new std::list<lhsnode *>*[capacity_]()),
         head_(nullptr),
         tail_(nullptr) {
-    // CR: replace with insert
     for (auto it = other.begin(); it != other.end(); it++) {
         T e = *it;
         this->insert(e);
