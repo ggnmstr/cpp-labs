@@ -98,7 +98,7 @@ bool linkedhs<T,Hasher>::contains(const T &e) const {
 }
 
 template<class T, class Hasher>
-linkedhs<T,Hasher>::iterator linkedhs<T,Hasher>::find(const T &e) const {
+typename linkedhs<T,Hasher>::iterator linkedhs<T,Hasher>::find(const T &e) const {
     unsigned long long hash = e.hash() % capacity_;
     std::list<lhsnode *> *list = arr_[hash];
     if (list == nullptr) return end();
@@ -212,12 +212,12 @@ template<class T, class Hasher>
 linkedhs<T,Hasher>::iterator::iterator(lhsnode *cur) : cur_(cur) {}
 
 template<class T, class Hasher>
-linkedhs<T,Hasher>::iterator linkedhs<T,Hasher>::begin() const {
+typename linkedhs<T,Hasher>::iterator linkedhs<T,Hasher>::begin() const {
     return iterator(this->head_);
 }
 
 template<class T, class Hasher>
-linkedhs<T,Hasher>::iterator linkedhs<T,Hasher>::end() const {
+typename linkedhs<T,Hasher>::iterator linkedhs<T,Hasher>::end() const {
     return iterator(nullptr);
 }
 
@@ -227,26 +227,26 @@ T linkedhs<T,Hasher>::iterator::operator*() {
 }
 
 template<class T, class Hasher>
-linkedhs<T,Hasher>::iterator &linkedhs<T,Hasher>::iterator::operator--() {
+typename linkedhs<T,Hasher>::iterator &linkedhs<T,Hasher>::iterator::operator--() {
     cur_ = cur_->prev_;
     return *this;
 }
 
 template<class T, class Hasher>
-linkedhs<T,Hasher>::iterator linkedhs<T,Hasher>::iterator::operator--(int) {
+typename linkedhs<T,Hasher>::iterator linkedhs<T,Hasher>::iterator::operator--(int) {
     linkedhs<T,Hasher>::iterator it(*this);
     cur_ = cur_->prev_;
     return it;
 }
 
 template<class T, class Hasher>
-linkedhs<T,Hasher>::iterator &linkedhs<T,Hasher>::iterator::operator++() {
+typename linkedhs<T,Hasher>::iterator &linkedhs<T,Hasher>::iterator::operator++() {
     cur_ = cur_->next_;
     return *this;
 }
 
 template<class T, class Hasher>
-linkedhs<T,Hasher>::iterator linkedhs<T,Hasher>::iterator::operator++(int) {
+typename linkedhs<T,Hasher>::iterator linkedhs<T,Hasher>::iterator::operator++(int) {
     linkedhs<T,Hasher>::iterator it(*this);
     cur_ = cur_->next_;
     return it;

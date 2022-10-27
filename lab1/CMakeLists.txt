@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 add_executable(Lab1 main.cpp linkedhashset.hpp student.cpp)
 
-#add_executable(linkedhs_test linkedhashset.hpp lhstest.cpp student.cpp)
+add_executable(linkedhs_test linkedhashset.hpp lhstest.cpp student.cpp)
 
 # CR: remove line, check if options are still there
 add_compile_options(-Wall -Wpedantic -Werror -g)
