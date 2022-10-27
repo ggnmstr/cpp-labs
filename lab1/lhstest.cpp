@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
-#include "linkedhashset.hpp"
+#include "linkedhashset.h"
+#include "student.hpp"
 
 TEST(InsertTest, Empty) {
     linkedhs l1;
