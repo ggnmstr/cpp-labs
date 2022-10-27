@@ -11,7 +11,6 @@ struct student {
         std::string name_;
 };
 
-class studentHasher{
-public:
-    unsigned long long operator()(const student &s);
+struct studentHasher{
+    size_t operator()(const student &s);
 };
