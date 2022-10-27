@@ -133,7 +133,7 @@ bool linkedhs<T,Hasher>::insert(const T &e) {
 
 template<class T, class Hasher>
 bool linkedhs<T,Hasher>::remove(const T &e) {
-    unsigned long long hash = e.hash();
+    unsigned long long hash = Hasher()(e);
     hash %= capacity_;
     std::list<lhsnode *> *list = arr_[hash];
     if (list == nullptr) return false;

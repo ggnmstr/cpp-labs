@@ -5,7 +5,6 @@
 struct student {
         student(unsigned age, std::string name);
         bool operator==(const student &other) const;
-        unsigned long long hash() const;
     private:
         friend class studentHasher;
         unsigned age_;
