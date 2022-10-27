@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
 
-project(linkedhs VERSION 0.8)
+project(linkedhs VERSION 2)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -9,9 +9,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 add_executable(Lab1 main.cpp student.cpp)
 
 add_executable(linkedhs_test lhstest.cpp student.cpp)
-
-# CR: remove line, check if options are still there
-add_compile_options(-Wall -Wpedantic -Werror -g)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -26,7 +23,7 @@ FetchContent_MakeAvailable(googletest)
 SET(WARN_FLAGS "-Wall -Wpedantic -Wextra")
 # CR: https://github.com/google/sanitizers/wiki/AddressSanitizerLeakSanitizer
 #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${WARN_FLAGS} ${ASAN_OPTIONS}") 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address  -g ")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${WARN_FLAGS} -fsanitize=address  -g ")
 
 enable_testing()
 
