@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 #include "linkedhashset.h"
 #include "student.hpp"
-/*
+
 TEST(InsertTest, Empty) {
-    linkedhs l1;
+    linkedhs<student,studentHasher> l1;
     ASSERT_EQ(l1.size(), 0);
     student s1(19, "Jora");
     l1.insert(s1);
@@ -12,7 +12,7 @@ TEST(InsertTest, Empty) {
 };
 
 TEST(InsertTest, Present) {
-    linkedhs l1;
+    linkedhs<student,studentHasher> l1;
     student s1(19, "Jora");
     student s2(20, "George");
     student s3(21, "Georgiy");
@@ -24,7 +24,7 @@ TEST(InsertTest, Present) {
 }
 
 TEST(InsertTest, Many) {
-    linkedhs l1;
+    linkedhs<student,studentHasher> l1;
     for (int i = 0; i < 512; i++) {
         student s1(i, "Name" + i);
         l1.insert(s1);
@@ -37,7 +37,7 @@ TEST(InsertTest, Many) {
 }
 
 TEST(CopyConstructorTest, Equality) {
-    linkedhs l1;
+    linkedhs<student,studentHasher> l1;
     student s1(19, "Jora");
     l1.insert(s1);
     linkedhs l2(l1);
@@ -45,7 +45,7 @@ TEST(CopyConstructorTest, Equality) {
 }
 
 TEST(CopyConstructorTest, Independence) {
-    linkedhs l1;
+    linkedhs<student,studentHasher> l1;
     student s1(19, "Jora");
     l1.insert(s1);
     linkedhs l2(l1);
@@ -54,32 +54,32 @@ TEST(CopyConstructorTest, Independence) {
 }
 
 TEST(OperatorAssignTest, Equality) {
-    linkedhs l1;
+    linkedhs<student,studentHasher> l1;
     student s1(19, "Jora");
     l1.insert(s1);
-    linkedhs l2;
+    linkedhs<student,studentHasher> l2;
     l2 = l1;
     ASSERT_EQ(l1, l2);
 }
 
 TEST(OperatorAssignTest, Independence) {
-    linkedhs l1;
+    linkedhs<student,studentHasher> l1;
     student s1(19, "Jora");
     l1.insert(s1);
-    linkedhs l2;
+    linkedhs<student,studentHasher> l2;
     l2 = l1;
     l1.remove(s1);
     ASSERT_NE(l1, l2);
 }
 
 TEST(RemoveTest, Empty) {
-    linkedhs l1;
+    linkedhs<student,studentHasher> l1;
     student s1(20, "Name");
     ASSERT_FALSE(l1.remove(s1));
 }
 
 TEST(RemoveTest, NonExistent) {
-    linkedhs l1;
+    linkedhs<student,studentHasher> l1;
     student s1(20, "Name");
     student s2(21, "Name1");
     l1.insert(s1);
@@ -91,7 +91,7 @@ TEST(RemoveTest, NonExistent) {
 }
 
 TEST(RemoveTest, Many) {
-    linkedhs l1;
+    linkedhs<student,studentHasher> l1;
     for (int i = 0; i < 512; i++) {
         student s1(i, "Name" + i);
         l1.insert(s1);
@@ -106,8 +106,8 @@ TEST(RemoveTest, Many) {
 }
 
 TEST(SwapTest, Empty) {
-    linkedhs l1;
-    linkedhs l2;
+    linkedhs<student,studentHasher> l1;
+    linkedhs<student,studentHasher> l2;
     ASSERT_EQ(l1, l2);
     l1.swap(l2);
     ASSERT_EQ(l1, l2);
@@ -116,8 +116,8 @@ TEST(SwapTest, Empty) {
 TEST(SwapTest, Different) {
     student s1(20, "Name");
     student s2(120, "Surname");
-    linkedhs l1;
-    linkedhs l2;
+    linkedhs<student,studentHasher> l1;
+    linkedhs<student,studentHasher> l2;
     l1.insert(s1);
     l2.insert(s2);
     linkedhs c1(l1);
@@ -128,8 +128,8 @@ TEST(SwapTest, Different) {
 }
 
 TEST(SwapTest,EmptyWNonEmpty){
-    linkedhs l1; 
-    linkedhs l2;
+    linkedhs<student,studentHasher> l1; 
+    linkedhs<student,studentHasher> l2;
     student s2(12,"MooMoo");
     l2.insert(s2);
     l2.swap(l1);
@@ -139,29 +139,29 @@ TEST(SwapTest,EmptyWNonEmpty){
 }
 
 TEST(SwapTest, Many) {
-    linkedhs l1;
-    linkedhs l2;
+    linkedhs<student,studentHasher> l1;
+    linkedhs<student,studentHasher> l2;
     for (int i = 0; i < 512; i++) {
         student s1(i, "Name1" + i);
         student s2(i + 1000, "2Name2" + i);
         l1.insert(s1);
         l2.insert(s2);
     }
-    linkedhs c1(l1);
-    linkedhs c2(l2);
+    linkedhs<student,studentHasher> c1(l1);
+    linkedhs<student,studentHasher> c2(l2);
     l1.swap(l2);
     ASSERT_EQ(l1, c2);
     ASSERT_EQ(l2, c1);
 }
 
 TEST(SizeTest, Empty) {
-    linkedhs l1;
+    linkedhs<student,studentHasher> l1;
     ASSERT_EQ(l1.size(), 0);
     ASSERT_TRUE(l1.empty());
 }
 
 TEST(SizeTest, NonEmpty) {
-    linkedhs l1;
+    linkedhs<student,studentHasher> l1;
     student s1(123, "ABC");
     l1.insert(s1);
     ASSERT_EQ(l1.size(), 1);
@@ -169,14 +169,14 @@ TEST(SizeTest, NonEmpty) {
 }
 
 TEST(ContainsTest, Existent) {
-    linkedhs l1;
+    linkedhs<student,studentHasher> l1;
     student s1(42, "Six");
     l1.insert(s1);
     ASSERT_TRUE(l1.contains(s1));
 }
 
 TEST(ContainsTest, NonExistent) {
-    linkedhs l1;
+    linkedhs<student,studentHasher> l1;
     student s1(46, "Two");
     student s2(100, "Steve");
     l1.insert(s1);
@@ -185,14 +185,14 @@ TEST(ContainsTest, NonExistent) {
 
 // CR: check equality properties
 TEST(OperatorEqTest, Empty) {
-    linkedhs l1;
-    linkedhs l2;
+    linkedhs<student,studentHasher> l1;
+    linkedhs<student,studentHasher> l2;
     ASSERT_TRUE(l1 == l2);
 }
 
 TEST(OperatorEqTest, Equal) {
-    linkedhs l1;
-    linkedhs l2;
+    linkedhs<student,studentHasher> l1;
+    linkedhs<student,studentHasher> l2;
     student s1(1337, "1337");
     l1.insert(s1);
     l2.insert(s1);
@@ -201,8 +201,8 @@ TEST(OperatorEqTest, Equal) {
 
 
 TEST(OperatorEqTest, NonEqual) {
-    linkedhs l1;
-    linkedhs l2;
+    linkedhs<student,studentHasher> l1;
+    linkedhs<student,studentHasher> l2;
     student s1(1337, "1337");
     student s2(7331, "7331");
     l1.insert(s1);
@@ -211,7 +211,7 @@ TEST(OperatorEqTest, NonEqual) {
 }
 
 TEST(OperatorEqTest, Reflex) {
-    linkedhs l1;
+    linkedhs<student,studentHasher> l1;
     student s1(1337, "1337");
     student s2(7331, "7331");
     l1.insert(s1);
@@ -220,32 +220,32 @@ TEST(OperatorEqTest, Reflex) {
 }
 
 TEST(OperatorEqTest, Transitivity){
-    linkedhs l1;
+    linkedhs<student,studentHasher> l1;
     student s1(44,"80085");
-    linkedhs l2(l1);
-    linkedhs l3 = l1;
+    linkedhs<student,studentHasher> l2(l1);
+    linkedhs<student,studentHasher> l3 = l1;
     ASSERT_TRUE(l1 == l2);
     ASSERT_TRUE(l2 == l3);
     ASSERT_TRUE(l3 == l1);
 }
 
 TEST(OperatorNEqTest, NonEqual){
-    linkedhs l1;
-    linkedhs l2;
+    linkedhs<student,studentHasher> l1;
+    linkedhs<student,studentHasher> l2;
     student s1(123,"ASDASD");
     l1.insert(s1);
     ASSERT_TRUE(l1 != l2);
 }
 
 TEST(ClearTest, Empty) {
-    linkedhs l1;
+    linkedhs<student,studentHasher> l1;
     l1.clear();
     ASSERT_EQ(l1.size(), 0);
     ASSERT_TRUE(l1.empty());
 }
 
 TEST(ClearTest, Many) {
-    linkedhs l1;
+    linkedhs<student,studentHasher> l1;
     for (int i = 0; i < 512; i++) {
         student s1(i, "NameXXX" + i);
         l1.insert(s1);
@@ -256,14 +256,14 @@ TEST(ClearTest, Many) {
 }
 
 TEST(IteratorTest, Empty) {
-    linkedhs l1;
+    linkedhs<student,studentHasher> l1;
     ASSERT_EQ(l1.begin(), nullptr);
     ASSERT_EQ(l1.begin(), l1.end());
 }
 
 // CR: add element, remove element, add new element, check that new element is the beginning
 TEST(IteratorTest, Begin) {
-    linkedhs l1;
+    linkedhs<student,studentHasher> l1;
     for (int i = 0; i < 512; i++) {
         student s1(i, "NameXXX" + i);
         l1.insert(s1);
@@ -273,7 +273,7 @@ TEST(IteratorTest, Begin) {
 }
 
 TEST(IteratorTest, IterateWhole) {
-    linkedhs l1;
+    linkedhs<student,studentHasher> l1;
     for (int i = 0; i < 512; i++) {
         student s1(i, "NameXXX" + i);
         l1.insert(s1);
@@ -287,8 +287,8 @@ TEST(IteratorTest, IterateWhole) {
 }
 
 TEST(IteratorTest, Find) {
-    linkedhs l1;
-    linkedhs l2;
+    linkedhs<student,studentHasher> l1;
+    linkedhs<student,studentHasher> l2;
     for (int i = 0; i < 512; i++) {
         student s1(i, "Name" + i);
         student s2(511 - i, "Name" + (511 - i));
@@ -302,7 +302,7 @@ TEST(IteratorTest, Find) {
 }
 
 TEST(IteratorTest, EqOperator) {
-    linkedhs l1;
+    linkedhs<student,studentHasher> l1;
     for (int i = 0; i < 512; i++) {
         student s1(i, "Name" + i);
         l1.insert(s1);
@@ -315,7 +315,7 @@ TEST(IteratorTest, EqOperator) {
 }
 
 TEST(IteratorTest, HeadCheck){
-    linkedhs l1;
+    linkedhs<student,studentHasher> l1;
     student s1(12,"ABC");
     l1.insert(s1);
     ASSERT_EQ(*l1.begin(),s1);
@@ -328,4 +328,4 @@ TEST(IteratorTest, HeadCheck){
     l1.insert(s2);
     ASSERT_EQ(*l1.begin(),s2);
 }
-*/
+
