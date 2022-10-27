@@ -25,7 +25,8 @@ FetchContent_MakeAvailable(googletest)
 
 SET(WARN_FLAGS "-Wall -Wpedantic -Wextra")
 # CR: https://github.com/google/sanitizers/wiki/AddressSanitizerLeakSanitizer
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${WARN_FLAGS} ${ASAN_OPTIONS}") 
+#SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${WARN_FLAGS} ${ASAN_OPTIONS}") 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address  -g ")
 
 enable_testing()
 

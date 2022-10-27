@@ -26,12 +26,12 @@ TEST(InsertTest, Present) {
 TEST(InsertTest, Many) {
     linkedhs<student,studentHasher> l1;
     for (int i = 0; i < 512; i++) {
-        student s1(i, "Name" + i);
+        student s1(i, "Name" );
         l1.insert(s1);
     }
     ASSERT_EQ(l1.size(), 512);
     for (int i = 0; i < 512; i++) {
-        student s1(i, "Name" + i);
+        student s1(i, "Name" );
         ASSERT_TRUE(l1.contains(s1));
     }
 }
@@ -93,15 +93,15 @@ TEST(RemoveTest, NonExistent) {
 TEST(RemoveTest, Many) {
     linkedhs<student,studentHasher> l1;
     for (int i = 0; i < 512; i++) {
-        student s1(i, "Name" + i);
+        student s1(i, "Name");
         l1.insert(s1);
     }
     for (int i = 1; i < 512; i++) {
-        student s1(i, "Name" + i);
+        student s1(i, "Name");
         l1.remove(s1);
     }
     ASSERT_EQ(l1.size(), 1);
-    student s2(0, "Name" + 0);
+    student s2(0, "Name");
     ASSERT_TRUE(l1.contains(s2));
 }
 
@@ -142,8 +142,8 @@ TEST(SwapTest, Many) {
     linkedhs<student,studentHasher> l1;
     linkedhs<student,studentHasher> l2;
     for (int i = 0; i < 512; i++) {
-        student s1(i, "Name1" + i);
-        student s2(i + 1000, "2Name2" + i);
+        student s1(i, "Name1");
+        student s2(i + 1000, "2Name2");
         l1.insert(s1);
         l2.insert(s2);
     }
@@ -247,7 +247,7 @@ TEST(ClearTest, Empty) {
 TEST(ClearTest, Many) {
     linkedhs<student,studentHasher> l1;
     for (int i = 0; i < 512; i++) {
-        student s1(i, "NameXXX" + i);
+        student s1(i, "NameXXX");
         l1.insert(s1);
     }
     l1.clear();
@@ -264,22 +264,22 @@ TEST(IteratorTest, Empty) {
 TEST(IteratorTest, Begin) {
     linkedhs<student,studentHasher> l1;
     for (int i = 0; i < 512; i++) {
-        student s1(i, "NameXXX" + i);
+        student s1(i, "NameXXX");
         l1.insert(s1);
     }
-    student s0(0, "NameXXX" + 0);
+    student s0(0, "NameXXX");
     ASSERT_EQ(*l1.begin(), s0);
 }
 
 TEST(IteratorTest, IterateWhole) {
     linkedhs<student,studentHasher> l1;
     for (int i = 0; i < 512; i++) {
-        student s1(i, "NameXXX" + i);
+        student s1(i, "NameXXX");
         l1.insert(s1);
     }
     int i = 0;
     for (auto it = l1.begin(); it != l1.end(); it++) {
-        student s2(i, "NameXXX" + i);
+        student s2(i, "NameXXX");
         ASSERT_EQ(*it, s2);
         i++;
     }
@@ -289,12 +289,12 @@ TEST(IteratorTest, Find) {
     linkedhs<student,studentHasher> l1;
     linkedhs<student,studentHasher> l2;
     for (int i = 0; i < 512; i++) {
-        student s1(i, "Name" + i);
-        student s2(511 - i, "Name" + (511 - i));
+        student s1(i, "Name");
+        student s2(511 - i, "Name");
         l1.insert(s1);
         l2.insert(s2);
     }
-    student sf(10, "Name" + 10);
+    student sf(10, "Name");
     auto it1 = l1.find(sf);
     auto it2 = l2.find(sf);
     ASSERT_EQ(*it1, *it2);
@@ -303,10 +303,10 @@ TEST(IteratorTest, Find) {
 TEST(IteratorTest, EqOperator) {
     linkedhs<student,studentHasher> l1;
     for (int i = 0; i < 512; i++) {
-        student s1(i, "Name" + i);
+        student s1(i, "Name" );
         l1.insert(s1);
     }
-    student sf(10, "Name" + 10);
+    student sf(10, "Name");
     auto it1 = l1.find(sf);
     auto it2 = l1.begin();
     for (int i = 0; i < 10; i++) it2++;
