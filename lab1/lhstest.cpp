@@ -40,7 +40,7 @@ TEST(CopyConstructorTest, Equality) {
     linkedhs<student,studentHasher> l1;
     student s1(19, "Jora");
     l1.insert(s1);
-    linkedhs l2(l1);
+    linkedhs<student,studentHasher> l2(l1);
     ASSERT_EQ(l1, l2);
 }
 
@@ -48,7 +48,7 @@ TEST(CopyConstructorTest, Independence) {
     linkedhs<student,studentHasher> l1;
     student s1(19, "Jora");
     l1.insert(s1);
-    linkedhs l2(l1);
+    linkedhs<student,studentHasher> l2(l1);
     l1.remove(s1);
     ASSERT_NE(l1, l2);
 }
@@ -120,8 +120,8 @@ TEST(SwapTest, Different) {
     linkedhs<student,studentHasher> l2;
     l1.insert(s1);
     l2.insert(s2);
-    linkedhs c1(l1);
-    linkedhs c2(l2);
+    linkedhs<student,studentHasher> c1(l1);
+    linkedhs<student,studentHasher> c2(l2);
     l1.swap(l2);
     ASSERT_EQ(l1, c2);
     ASSERT_EQ(l2, c1);
