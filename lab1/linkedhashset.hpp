@@ -52,31 +52,17 @@ linkedhs<T,Hasher>::~linkedhs() {
 
 template<class T, class Hasher>
 void linkedhs<T,Hasher>::swap(linkedhs<T,Hasher> &other) {
-    size_t tmp = other.size_;
-    other.size_ = size_;
-    size_ = tmp;
-
-    tmp = other.capacity_;
-    other.capacity_ = capacity_;
-    capacity_ = tmp;
-
-    std::list<lhsnode *> **tmparr = other.arr_;
-    other.arr_ = arr_;
-    arr_ = tmparr;
-
-    lhsnode *tmplnd = other.head_;
-    other.head_ = head_;
-    head_ = tmplnd;
-
-    tmplnd = other.tail_;
-    other.tail_ = tail_;
-    tail_ = tmplnd;
+    std::swap(this->size_, other.size_);
+    std::swap(this->capacity_,other.capacity_);
+    std::swap(this->arr_, other.arr_);
+    std::swap(this->head_, other.head_);
+    std::swap(this->tail_, other.tail_);
 }
 
 template<class T, class Hasher>
 void linkedhs<T,Hasher>::resize() {
     linkedhs<T,Hasher> newlhs(*this, capacity_ * 2);
-    cleanl();
+    clear_lists();
     swap(newlhs);
 }
 
@@ -174,7 +160,7 @@ bool linkedhs<T,Hasher>::operator!=(const linkedhs<T,Hasher> &other) const {
 
 template<class T, class Hasher>
 void linkedhs<T,Hasher>::clear() {
-    cleanl();
+    clear_lists();
     for (size_t i = 0; i < capacity_; i++){
         std::list<lhsnode *> *list = arr_[i];
         if (list == nullptr) continue;
@@ -187,7 +173,7 @@ void linkedhs<T,Hasher>::clear() {
 }
 
 template<class T, class Hasher>
-void linkedhs<T,Hasher>::cleanl() {
+void linkedhs<T,Hasher>::clear_lists() {
     for (size_t i = 0; i < capacity_; i++) {
         if (size_ == 0) break;
         std::list<lhsnode *> *list = arr_[i];

@@ -9,7 +9,7 @@ public:
     class iterator {
     public:
         // iterator constructor
-        iterator(lhsnode *cur);
+        explicit iterator(lhsnode *cur);
 
         // returns element of lhsnode
         T operator*();
@@ -110,7 +110,7 @@ private:
     void resize();
 
     // this clean method doesn't delete pointers to std::list<lhsnode*>
-    void cleanl();
+    void clear_lists();
 
     // specific private copy constructor used for easier resizing
     linkedhs(const linkedhs &other, size_t newcap);
