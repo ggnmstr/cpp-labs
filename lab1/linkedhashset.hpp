@@ -11,13 +11,15 @@ linkedhs<T,Hasher>::linkedhs() :
 
 template<class T, class Hasher>
 linkedhs<T,Hasher>::linkedhs(const linkedhs<T,Hasher> &other) :
+// CR: move condition to method
+// CR: call another copy ctor from here
         capacity_(other.size_ >= DEFAULT_CAPACITY * 0.5 ? other.capacity_ : DEFAULT_CAPACITY),
         size_(0),
         arr_(new std::list<lhsnode *>*[capacity_]()),
         head_(nullptr),
         tail_(nullptr) {
     for (auto it = other.begin(); it != other.end(); it++) {
-        T e = *it;
+        const T & e = *it;
         this->insert(e);
     }
 }
@@ -30,16 +32,15 @@ linkedhs<T,Hasher>::linkedhs(const linkedhs<T,Hasher> &other, size_t newcap) :
         head_(nullptr),
         tail_(nullptr) {
     for (auto it = other.begin(); it != other.end(); it++) {
-        T e = *it;
+        const T & e = *it;
         this->insert(e);
     }
 }
 
 template<class T, class Hasher>
-linkedhs<T,Hasher> &linkedhs<T,Hasher>::operator=(const linkedhs<T,Hasher> &other) {
-    if (&other == this) return *this;
-    linkedhs<T,Hasher> lcp(other);
-    this->swap(lcp);
+linkedhs<T,Hasher> &linkedhs<T,Hasher>::operator=(linkedhs<T,Hasher> other) {
+    //CR: use this->smth everywhere or don't use at all
+    this->swap(other);
     return *this;
 }
 
@@ -85,10 +86,8 @@ typename linkedhs<T,Hasher>::iterator linkedhs<T,Hasher>::find(const T &e) const
     size_t hash = Hasher()(e) % capacity_;
     std::list<lhsnode *> *list = arr_[hash];
     if (list == nullptr) return end();
-    for (lhsnode *x: *list) {
-        if (x->element_ == e) return iterator(x);
-    }
-    return end();
+    auto it = std::find_if(list->begin(), list->end(), [&e](lhsnode * x){ return x->element_ == e; });
+    return it == list->end() ? end() : iterator(*it);
 }
 
 
@@ -121,6 +120,10 @@ bool linkedhs<T,Hasher>::remove(const T &e) {
     hash %= capacity_;
     std::list<lhsnode *> *list = arr_[hash];
     if (list == nullptr) return false;
+
+    // CR: 
+    // linkedhs<T,Hasher>::iterator it = find(e);
+    // it.cur_;
 
     for (auto it = list->begin(); it != list->end(); ++it) {
         if (e == (*it)->element_) {

@@ -328,3 +328,10 @@ TEST(IteratorTest, HeadCheck){
     ASSERT_EQ(*l1.begin(),s2);
 }
 
+
+TEST(CompileTemplate, CallMethods) {
+  linkedhs<int> lhs;
+  // lhs.insert();
+  // lhs.remove()
+  // CR: and so on...
+}

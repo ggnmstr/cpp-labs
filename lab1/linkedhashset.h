@@ -46,7 +46,7 @@ public:
     ~linkedhs();
 
     // operator=
-    linkedhs &operator=(const linkedhs &other);
+    linkedhs &operator=(linkedhs other);
 
     // inserts element e inside linkedhs
     // returns false in case of failure (element already exists)
