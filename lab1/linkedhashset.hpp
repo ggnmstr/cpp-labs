@@ -38,7 +38,6 @@ linkedhs<T,Hasher>::linkedhs(const linkedhs<T,Hasher> &other, size_t newcap) :
 template<class T, class Hasher>
 linkedhs<T,Hasher> &linkedhs<T,Hasher>::operator=(const linkedhs<T,Hasher> &other) {
     if (&other == this) return *this;
-    this->clear();
     linkedhs<T,Hasher> lcp(other);
     this->swap(lcp);
     return *this;
