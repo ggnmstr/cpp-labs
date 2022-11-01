@@ -89,6 +89,8 @@ public:
 
 private:
 
+    bool needs_resize(size_t size, size_t cap) const;
+
     // node of linkedhashset
     struct lhsnode {
         T element_;

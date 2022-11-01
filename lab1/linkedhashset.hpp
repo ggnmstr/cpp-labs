@@ -11,17 +11,7 @@ linkedhs<T,Hasher>::linkedhs() :
 
 template<class T, class Hasher>
 linkedhs<T,Hasher>::linkedhs(const linkedhs<T,Hasher> &other) :
-// CR: move condition to method
-// CR: call another copy ctor from here
-        capacity_(other.size_ >= DEFAULT_CAPACITY * 0.5 ? other.capacity_ : DEFAULT_CAPACITY),
-        size_(0),
-        arr_(new std::list<lhsnode *>*[capacity_]()),
-        head_(nullptr),
-        tail_(nullptr) {
-    for (auto it = other.begin(); it != other.end(); it++) {
-        const T & e = *it;
-        this->insert(e);
-    }
+    linkedhs(other,needs_resize(other.size_,DEFAULT_CAPACITY) ? other.capacity_ : DEFAULT_CAPACITY) {
 }
 
 template<class T, class Hasher>
@@ -46,8 +36,8 @@ linkedhs<T,Hasher> &linkedhs<T,Hasher>::operator=(linkedhs<T,Hasher> other) {
 
 template<class T, class Hasher>
 linkedhs<T,Hasher>::~linkedhs() {
-    clear();
-    delete[] arr_;
+    this->clear();
+    delete[] this->arr_;
 }
 
 template<class T, class Hasher>
@@ -61,40 +51,45 @@ void linkedhs<T,Hasher>::swap(linkedhs<T,Hasher> &other) {
 
 template<class T, class Hasher>
 void linkedhs<T,Hasher>::resize() {
-    linkedhs<T,Hasher> newlhs(*this, capacity_ * 2);
-    clear_lists();
-    swap(newlhs);
+    linkedhs<T,Hasher> newlhs(*this, this->capacity_ * 2);
+    this->clear_lists();
+    this->swap(newlhs);
+}
+
+template<class T, class Hasher>
+bool linkedhs<T,Hasher>::needs_resize(size_t size, size_t cap) const{
+    return size >= cap * RESIZE_FACTOR;
 }
 
 template<class T, class Hasher>
 size_t linkedhs<T,Hasher>::size() const {
-    return size_;
+    return this->size_;
 }
 
 template<class T, class Hasher>
 bool linkedhs<T,Hasher>::empty() const {
-    return size_ == 0;
+    return this->size_ == 0;
 }
 
 template<class T, class Hasher>
 bool linkedhs<T,Hasher>::contains(const T &e) const {
-    return find(e) != end();
+    return this->find(e) != this->end();
 }
 
 template<class T, class Hasher>
 typename linkedhs<T,Hasher>::iterator linkedhs<T,Hasher>::find(const T &e) const {
     size_t hash = Hasher()(e) % capacity_;
-    std::list<lhsnode *> *list = arr_[hash];
+    std::list<lhsnode *> *list = this->arr_[hash];
     if (list == nullptr) return end();
     auto it = std::find_if(list->begin(), list->end(), [&e](lhsnode * x){ return x->element_ == e; });
-    return it == list->end() ? end() : iterator(*it);
+    return it == list->end() ? this->end() : iterator(*it);
 }
 
 
 template<class T, class Hasher>
 bool linkedhs<T,Hasher>::insert(const T &e) {
     if (this->contains(e)) return false;
-    if (size_ >= capacity_ * RESIZE_FACTOR) resize();
+    if (this->needs_resize(size_,capacity_)) this->resize();
     size_t hash = Hasher()(e);
     hash %= capacity_;
     if (arr_[hash] == nullptr){
@@ -129,16 +124,16 @@ bool linkedhs<T,Hasher>::remove(const T &e) {
         if (e == (*it)->element_) {
             lhsnode *cur = (*it);
             if ( cur == tail_){
-                tail_ = cur->prev_;
+                this->tail_ = cur->prev_;
             }
             if ( cur == head_){
-                head_ = cur->next_;
+                this->head_ = cur->next_;
             }
             if (cur->prev_ != nullptr) cur->prev_->next_ = cur->next_;
             if (cur->next_ != nullptr) cur->next_->prev_ = cur->prev_;
             list->erase(it);
             delete cur;
-            size_--;
+            this->size_--;
             return true;
         }
     }
@@ -148,7 +143,7 @@ bool linkedhs<T,Hasher>::remove(const T &e) {
 
 template<class T, class Hasher>
 bool linkedhs<T,Hasher>::operator==(const linkedhs<T,Hasher> &other) const {
-    if (size_ != other.size_) return false;
+    if (this->size_ != other.size_) return false;
     for (auto it = this->begin(); it != this->end(); it++) {
         if (!(other.contains(*it))) return false;
     }
@@ -162,16 +157,13 @@ bool linkedhs<T,Hasher>::operator!=(const linkedhs<T,Hasher> &other) const {
 
 template<class T, class Hasher>
 void linkedhs<T,Hasher>::clear() {
-    clear_lists();
+    this->clear_lists();
     for (size_t i = 0; i < capacity_; i++){
         std::list<lhsnode *> *list = arr_[i];
         if (list == nullptr) continue;
         delete list;
         arr_[i] = nullptr;
     }
-    //head_ = nullptr;
-    //tail_ = nullptr;
-    //assert(size_ == 0);
 }
 
 template<class T, class Hasher>
@@ -187,8 +179,8 @@ void linkedhs<T,Hasher>::clear_lists() {
         list->clear();
 
     }
-    head_ = nullptr;
-    tail_ = nullptr;
+    this->head_ = nullptr;
+    this->tail_ = nullptr;
     assert(size_ == 0);
 }
 
@@ -209,38 +201,38 @@ typename linkedhs<T,Hasher>::iterator linkedhs<T,Hasher>::end() const {
 
 template<class T, class Hasher>
 T linkedhs<T,Hasher>::iterator::operator*() {
-    return cur_->element_;
+    return this->cur_->element_;
 }
 
 template<class T, class Hasher>
 typename linkedhs<T,Hasher>::iterator &linkedhs<T,Hasher>::iterator::operator--() {
-    cur_ = cur_->prev_;
+    this->cur_ = cur_->prev_;
     return *this;
 }
 
 template<class T, class Hasher>
 typename linkedhs<T,Hasher>::iterator linkedhs<T,Hasher>::iterator::operator--(int) {
     linkedhs<T,Hasher>::iterator it(*this);
-    cur_ = cur_->prev_;
+    this->cur_ = cur_->prev_;
     return it;
 }
 
 template<class T, class Hasher>
 typename linkedhs<T,Hasher>::iterator &linkedhs<T,Hasher>::iterator::operator++() {
-    cur_ = cur_->next_;
+    this->cur_ = cur_->next_;
     return *this;
 }
 
 template<class T, class Hasher>
 typename linkedhs<T,Hasher>::iterator linkedhs<T,Hasher>::iterator::operator++(int) {
     linkedhs<T,Hasher>::iterator it(*this);
-    cur_ = cur_->next_;
+    this->cur_ = cur_->next_;
     return it;
 }
 
 template<class T, class Hasher>
 bool linkedhs<T,Hasher>::iterator::operator==(const linkedhs<T,Hasher>::iterator &other) const {
-    return cur_ == other.cur_;
+    return this->cur_ == other.cur_;
 }
 
 template<class T, class Hasher>

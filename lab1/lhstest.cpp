@@ -183,7 +183,6 @@ TEST(ContainsTest, NonExistent) {
     ASSERT_FALSE(l1.contains(s2));
 }
 
-// CR: check equality properties
 TEST(OperatorEqTest, Empty) {
     linkedhs<student,studentHasher> l1;
     linkedhs<student,studentHasher> l2;
