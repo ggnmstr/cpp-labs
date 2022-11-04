@@ -353,7 +353,30 @@ TEST(IteratorTest, HeadCheck){
 
 TEST(CompileTemplate, CallMethods) {
   linkedhs<int> lhs;
-  // lhs.insert();
-  // lhs.remove()
-  // CR: and so on...
+  linkedhs<int> lhs2;
+  linkedhs<int> lhs3;
+  for (int i = 0; i < 100; i++){
+      lhs.insert(i);
+  }
+  lhs.remove(1);
+  lhs.swap(lhs2);
+  lhs3 = lhs2;
+  size_t size = lhs.size();
+  bool x = lhs.empty();
+  x = lhs.contains(1);
+  auto it = lhs.find(1);
+  x = lhs == lhs2;
+  x = lhs != lhs2;
+  int t;
+  for (it = lhs2.begin(); it != lhs2.end(); ++it){
+      t = *it;
+  }
+  it = lhs2.find(11);
+  --it;
+  it++;
+  it--;
+  auto it2 = lhs.find(1);
+  x = it == it2;
+  x = it != it2;
+  lhs.clear();
 }
