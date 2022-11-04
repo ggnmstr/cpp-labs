@@ -78,8 +78,7 @@ bool linkedhs<T,Hasher>::contains(const T &e) const {
 
 template<class T, class Hasher>
 typename linkedhs<T,Hasher>::iterator linkedhs<T,Hasher>::find(const T &e) const {
-    size_t hash = Hasher()(e) % capacity_;
-    std::list<lhsnode *> *list = this->arr_[hash];
+    std::list<lhsnode *> *list = this->get_list(e);
     if (list == nullptr) return end();
     auto it = std::find_if(list->begin(), list->end(), [&e](lhsnode * x){ return x->element_ == e; });
     return it == list->end() ? this->end() : iterator(*it);
@@ -111,9 +110,7 @@ bool linkedhs<T,Hasher>::insert(const T &e) {
 
 template<class T, class Hasher>
 bool linkedhs<T,Hasher>::remove(const T &e) {
-    size_t hash = Hasher()(e);
-    hash %= capacity_;
-    std::list<lhsnode *> *list = arr_[hash];
+    std::list<lhsnode *> *list = this->get_list(e);
     if (list == nullptr) return false;
 
     // CR: 
@@ -184,6 +181,13 @@ void linkedhs<T,Hasher>::clear_lists() {
     assert(size_ == 0);
 }
 
+template<class T, class Hasher>
+std::list<lhsnode*>* linkedhs<T,Hasher>::get_list(const T &e){
+    size_t hash = Hasher()(e);
+    hash %= capacity_;
+    std::list<lhsnode *> *list = arr_[hash];
+    return list;
+}
 
 // iterator
 template<class T, class Hasher>

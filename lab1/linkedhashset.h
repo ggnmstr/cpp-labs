@@ -106,6 +106,8 @@ private:
         }
     };
 
+    typename std::list<lhsnode*>* get_list(const T &e);
+
     friend linkedhs::iterator;
 
     // private resize to 2*current capacity
