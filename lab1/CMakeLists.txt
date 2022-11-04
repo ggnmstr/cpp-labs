@@ -6,9 +6,9 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 
-add_executable(Lab1 main.cpp student.cpp)
+add_executable(Lab1 main.cpp)
 
-add_executable(linkedhs_test lhstest.cpp student.cpp)
+add_executable(linkedhs_test lhstest.cpp)
 
 include(FetchContent)
 FetchContent_Declare(
