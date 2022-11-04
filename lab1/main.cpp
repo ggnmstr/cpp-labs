@@ -1,4 +1,4 @@
-#include "linkedhashset.h"
+#include "linkedhashset.hpp"
 #include <iostream>
 int main(){
     linkedhs<int> l1;
