@@ -31,7 +31,6 @@ linkedhs<T,Hasher>::linkedhs(const linkedhs<T,Hasher> &other, size_t newcap) :
 
 template<class T, class Hasher>
 linkedhs<T,Hasher> &linkedhs<T,Hasher>::operator=(linkedhs<T,Hasher> other) {
-    //CR: use this->smth everywhere or don't use at all
     this->swap(other);
     return *this;
 }
