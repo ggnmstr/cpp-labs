@@ -1,7 +1,8 @@
+#pragma once
 #include <list>
 #include <functional>
 
-template<class T, class Hasher = std::hash<T>>
+template<typename T, typename Hasher = std::hash<T>>
 class linkedhs {
 private:
     struct lhsnode;
@@ -106,7 +107,7 @@ private:
         }
     };
 
-    typename std::list<lhsnode*>* get_list(const T &e);
+    typename std::list<lhsnode*>* get_list(const T &e) const;
 
     friend linkedhs::iterator;
 
@@ -130,5 +131,3 @@ private:
     lhsnode *head_;
     lhsnode *tail_;
 };
-
-#include "linkedhashset.hpp"

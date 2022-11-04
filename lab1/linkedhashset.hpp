@@ -1,4 +1,6 @@
+#pragma once
 #include <cassert>
+#include "linkedhashset.h"
 
 template<class T, class Hasher>
 linkedhs<T,Hasher>::linkedhs() :
@@ -181,14 +183,6 @@ void linkedhs<T,Hasher>::clear_lists() {
     assert(size_ == 0);
 }
 
-template<class T, class Hasher>
-std::list<lhsnode*>* linkedhs<T,Hasher>::get_list(const T &e){
-    size_t hash = Hasher()(e);
-    hash %= capacity_;
-    std::list<lhsnode *> *list = arr_[hash];
-    return list;
-}
-
 // iterator
 template<class T, class Hasher>
 linkedhs<T,Hasher>::iterator::iterator(lhsnode *cur) : cur_(cur) {}
@@ -201,6 +195,14 @@ typename linkedhs<T,Hasher>::iterator linkedhs<T,Hasher>::begin() const {
 template<class T, class Hasher>
 typename linkedhs<T,Hasher>::iterator linkedhs<T,Hasher>::end() const {
     return iterator(nullptr);
+}
+
+template<typename T, typename Hasher>
+typename std::list<typename linkedhs<T, Hasher>::lhsnode *> * linkedhs<T, Hasher>::get_list(const T &e) const {
+    size_t hash = Hasher()(e);
+    hash %= capacity_;
+    std::list<lhsnode *> *list = arr_[hash];
+    return list;
 }
 
 template<class T, class Hasher>
