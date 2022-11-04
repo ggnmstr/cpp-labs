@@ -81,7 +81,7 @@ bool linkedhs<T,Hasher>::contains(const T &e) const {
 template<class T, class Hasher>
 typename linkedhs<T,Hasher>::iterator linkedhs<T,Hasher>::find(const T &e) const {
     std::list<lhsnode *> *list = this->get_list(e);
-    if (list == nullptr) return end();
+    if (list == nullptr) return this->end();
     auto it = std::find_if(list->begin(), list->end(), [&e](lhsnode * x){ return x->element_ == e; });
     return it == list->end() ? this->end() : iterator(*it);
 }
@@ -93,10 +93,8 @@ bool linkedhs<T,Hasher>::insert(const T &e) {
     if (this->needs_resize(size_,capacity_)) this->resize();
     size_t hash = Hasher()(e);
     hash %= capacity_;
-    if (arr_[hash] == nullptr){
-        arr_[hash] = new std::list<lhsnode*>;
-    }
-    std::list<lhsnode *> *s1 = arr_[hash];
+    if (this->arr_[hash] == nullptr) this->arr_[hash] = new std::list<lhsnode*>;
+    std::list<lhsnode *> *s1 = this->arr_[hash];
     lhsnode *newnode = new lhsnode(e, this->tail_);
     if (size_ == 0) {
         assert(this->head_ == nullptr);
@@ -115,19 +113,12 @@ bool linkedhs<T,Hasher>::remove(const T &e) {
     std::list<lhsnode *> *list = this->get_list(e);
     if (list == nullptr) return false;
 
-    // CR: 
-    // linkedhs<T,Hasher>::iterator it = find(e);
-    // it.cur_;
-
     for (auto it = list->begin(); it != list->end(); ++it) {
         if (e == (*it)->element_) {
             lhsnode *cur = (*it);
-            if ( cur == tail_){
-                this->tail_ = cur->prev_;
-            }
-            if ( cur == head_){
-                this->head_ = cur->next_;
-            }
+            if ( cur == tail_) this->tail_ = cur->prev_;
+            if ( cur == head_) this->head_ = cur->next_;
+
             if (cur->prev_ != nullptr) cur->prev_->next_ = cur->next_;
             if (cur->next_ != nullptr) cur->next_->prev_ = cur->prev_;
             list->erase(it);
@@ -167,20 +158,20 @@ void linkedhs<T,Hasher>::clear() {
 
 template<class T, class Hasher>
 void linkedhs<T,Hasher>::clear_lists() {
-    for (size_t i = 0; i < capacity_; i++) {
-        if (size_ == 0) break;
-        std::list<lhsnode *> *list = arr_[i];
+    for (size_t i = 0; i < this->capacity_; i++) {
+        if (this->size_ == 0) break;
+        std::list<lhsnode *> *list = this->arr_[i];
         if (list == nullptr) continue;
         for (lhsnode *x: *list) {
             delete x;
-            size_--;
+            this->size_--;
         }
         list->clear();
 
     }
     this->head_ = nullptr;
     this->tail_ = nullptr;
-    assert(size_ == 0);
+    assert(this->size_ == 0);
 }
 
 // iterator

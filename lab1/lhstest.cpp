@@ -1,6 +1,29 @@
 #include <gtest/gtest.h>
-#include "linkedhashset.h"
-#include "student.hpp"
+#include "linkedhashset.hpp"
+#include <string>
+
+struct student {
+    student(unsigned age, std::string name):age_(age),name_(name) {}
+    bool operator==(const student &other) const {
+        return age_ == other.age_ && name_ == other.name_;
+    }
+private:
+    friend class studentHasher;
+    unsigned age_;
+    std::string name_;
+};
+
+struct studentHasher{
+    size_t operator()(const student &student) {
+        // djb2 hash func
+        std::string s = student.name_ + std::to_string(student.age_);
+        unsigned long hash = 5381;
+        for (auto c: s) {
+            hash = (hash << 5) + hash + c; /* hash * 33 + c */
+        }
+        return hash;
+    }
+};
 
 TEST(InsertTest, Empty) {
     linkedhs<student,studentHasher> l1;
@@ -9,7 +32,7 @@ TEST(InsertTest, Empty) {
     l1.insert(s1);
     ASSERT_EQ(l1.size(), 1);
     ASSERT_TRUE(l1.contains(s1));
-};
+}
 
 TEST(InsertTest, Present) {
     linkedhs<student,studentHasher> l1;
