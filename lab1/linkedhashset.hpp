@@ -23,8 +23,7 @@ linkedhs<T,Hasher>::linkedhs(const linkedhs<T,Hasher> &other, size_t newcap) :
         arr_(new std::list<lhsnode *>*[newcap]()),
         head_(nullptr),
         tail_(nullptr) {
-    for (auto it = other.begin(); it != other.end(); it++) {
-        const T & e = *it;
+    for (const T & e : other) {
         this->insert(e);
     }
 }
@@ -53,7 +52,6 @@ void linkedhs<T,Hasher>::swap(linkedhs<T,Hasher> &other) {
 template<class T, class Hasher>
 void linkedhs<T,Hasher>::resize() {
     linkedhs<T,Hasher> newlhs(*this, this->capacity_ * 2);
-    this->clear_lists();
     this->swap(newlhs);
 }
 

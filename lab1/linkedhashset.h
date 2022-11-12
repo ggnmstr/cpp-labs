@@ -37,16 +37,14 @@ public:
         linkedhs::lhsnode *cur_;
     };
 
-    // linkedhs default constructor
     linkedhs();
 
-    // linkedhs copy constructor
+    // creates 'other' independent copy
     linkedhs(const linkedhs &other);
 
-    // destructor frees all memory allocated and empties lhs' lists
     ~linkedhs();
 
-    // operator=
+    // clears this linkedhs and copies elements from 'other'
     linkedhs &operator=(linkedhs other);
 
     // inserts element e inside linkedhs
@@ -57,13 +55,10 @@ public:
     // returns false in case of failure (element not found)
     bool remove(const T &e);
 
-    // swaps everything between 2 linkedhs'
     void swap(linkedhs &other);
 
-    // returns amount of elements added to linkedhs
     size_t size() const;
 
-    // returns true if no elements were added (otherwise false)
     bool empty() const;
 
     // returns true if element e exists in lhs
@@ -73,18 +68,19 @@ public:
     iterator find(const T &e) const;
 
     // comparison of every element in lhs (and also size_)
+    // order of insertion does not matter during comparison
     bool operator==(const linkedhs &other) const;
 
     // reverse of ==
     bool operator!=(const linkedhs &other) const;
 
     // returns iterator pointing to first element added to lhs
+    // iteration will be executed in insertion order
     iterator begin() const;
 
-    // returns iterator pointing to nullptr (after last element)
+    // returns iterator pointing after the last element
     iterator end() const;
 
-    // frees all allocated memory and empties all lhs' lists
     void clear();
 
 
