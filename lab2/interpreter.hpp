@@ -50,7 +50,7 @@ class Interpreter {
 
             for (std::string & symb : tokens){
                 if (is_number(symb)){
-                    std::cout << "PUSHED TO STACK:" << symb << std::endl;
+                    //std::cout << "PUSHED TO STACK:" << symb << std::endl;
                     stack_.push(std::stoi(symb));
                     continue;
                 };
