@@ -1,5 +1,5 @@
 #include <iostream>
-#include "interpreter.cpp"
+#include "interpreter.hpp"
 
 int main(){
     Interpreter &i = Interpreter::get_instance();
