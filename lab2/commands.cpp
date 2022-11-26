@@ -14,6 +14,7 @@ namespace {
     bool equal = Interpreter::get_instance().register_cmd("=",new Equal());
 
     bool dot = Interpreter::get_instance().register_cmd(".", new Dot());
+    bool print = Interpreter::get_instance().register_cmd(".\"",new Print());
 
     bool dup = Interpreter::get_instance().register_cmd("dup",new Dup());
     bool drop = Interpreter::get_instance().register_cmd("drop",new Drop());
