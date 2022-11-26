@@ -6,8 +6,10 @@ int main(){
     std::string cmds;
     while (true)
     {
-        std::cin >> cmds;
-        i.interpret(cmds);
+        std::getline(std::cin,cmds);
+        //std::cout << "Getlined!" << std::endl;
+        //i.interpret(cmds);
+        i.interpret(cmds.begin(),cmds.end());
     }
     return 0;
 }

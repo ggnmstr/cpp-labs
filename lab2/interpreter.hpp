@@ -5,6 +5,7 @@
 #include <iterator>
 #include <string>
 #include <stack>
+#include <functional>
 #include <vector>
 #include <unordered_map>
 #include <sstream>
@@ -12,7 +13,7 @@
 
 class Interpreter {
     public:
-
+        typedef std::function<Command *(std::vector<std::string>::iterator &,std::vector<std::string>::iterator &)> creator_f;
         ~Interpreter(){
             for (auto e : cmds_){
                 delete e.second;
@@ -29,6 +30,18 @@ class Interpreter {
             return true;
         }
 
+        std::string get_symb(std::string::iterator &begin,const std::string::iterator &end){
+            //while (begin != end && (*begin == ' ' || *begin == '\t')) begin++;
+            while (begin != end && *begin == ' ') begin++;
+            std::string::iterator itend = begin;
+            //while (itend != end && (*itend != ' ' || *itend != '\t')) itend++;
+            while (itend != end && *itend != ' ') itend++;
+            std::string x(begin,itend);
+            begin = itend;
+            return x;
+            
+        }
+
         Command *get_cmd(std::string &symb){
             auto cmd_it = cmds_.find(symb);
 
@@ -41,14 +54,32 @@ class Interpreter {
             return cmd;
         }
 
-        //void interpret(std::string::iterator &begin, std::string::iterator &end){
-        void interpret(std::string &cmds){
-            
-            std::istringstream iss(cmds);
-            std::vector<std::string> tokens{std::istream_iterator<std::string>{iss},
-                    std::istream_iterator<std::string>{}};
+        //void interpret(const std::string &cmds){
+        void interpret(const std::string::iterator &begin, const std::string::iterator &end){
+            std::string::iterator itbeg = begin;
+            // std::istringstream iss(cmds);
+            // std::vector<std::string> tokens{std::istream_iterator<std::string>{iss},
+            //         std::istream_iterator<std::string>{}};
+            while (itbeg != end){
+                std::string symb = get_symb(itbeg,end);
+                if (symb == "") continue;
+                //std::cout <<"'" << symb << "'" << std::endl;
+                if (is_number(symb)){
+                    stack_.push(std::stoi(symb));
+                    continue;
+                }
+                try {
+                    Command *cmd = get_cmd(symb);
+                    cmd->apply(stack_);
+                } catch (interpreter_error &e){
+                    std::cerr << e.what() << std::endl;
+                }
+            }
 
-            for (std::string & symb : tokens){
+            /*
+            //for (std::string & symb : tokens){
+            for (auto it = tokens.begin(); it != tokens.end(); it++){
+                std::string & symb = (*it);
                 if (is_number(symb)){
                     //std::cout << "PUSHED TO STACK:" << symb << std::endl;
                     stack_.push(std::stoi(symb));
@@ -63,6 +94,7 @@ class Interpreter {
                 }
                 
             }
+            */
         }
 
     private:
