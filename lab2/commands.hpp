@@ -213,11 +213,12 @@ class Print : public Command {
         void apply(std::stack<int> &stack, striter &begin, const striter &end) override {
             
             //std::cout << "PRINt!!" << std::endl;
+            begin++;
             while (begin != end && *begin != '"') {
                 std::cout << *begin;
                 begin++;
             }
-            //if (*begin == '"') begin++;
+            if (*begin == '"') begin++;
             std::cout << std::endl;
         }
 };
