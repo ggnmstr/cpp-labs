@@ -30,30 +30,6 @@ class Interpreter {
             return true;
         }
 
-        std::string get_symb(std::string::iterator &begin,const std::string::iterator &end){
-            //while (begin != end && (*begin == ' ' || *begin == '\t')) begin++;
-            while (begin != end && *begin == ' ') begin++;
-            std::string::iterator itend = begin;
-            //while (itend != end && (*itend != ' ' || *itend != '\t')) itend++;
-            while (itend != end && *itend != ' ') itend++;
-            std::string x(begin,itend);
-            begin = itend;
-            return x;
-            
-        }
-
-        Command *get_cmd(std::string &symb){
-            auto cmd_it = cmds_.find(symb);
-
-            if (cmd_it == cmds_.end()) {
-                std::stringstream ss; 
-                ss << "Command " << "'" << symb << "'" << " not found";
-                throw interpreter_error(ss.str());
-            }
-            Command *cmd = (*cmd_it).second;
-            return cmd;
-        }
-
         void interpret(const std::string::iterator &begin, const std::string::iterator &end){
             std::string::iterator itbeg = begin;
             while (itbeg != end){
@@ -82,6 +58,30 @@ class Interpreter {
                 if (!isdigit(*beg)) return false;
             }
             return true;
+        }
+
+        std::string get_symb(std::string::iterator &begin,const std::string::iterator &end){
+            //while (begin != end && (*begin == ' ' || *begin == '\t')) begin++;
+            while (begin != end && *begin == ' ') begin++;
+            std::string::iterator itend = begin;
+            //while (itend != end && (*itend != ' ' || *itend != '\t')) itend++;
+            while (itend != end && *itend != ' ') itend++;
+            std::string x(begin,itend);
+            begin = itend;
+            return x;
+            
+        }
+
+        Command *get_cmd(std::string &symb){
+            auto cmd_it = cmds_.find(symb);
+
+            if (cmd_it == cmds_.end()) {
+                std::stringstream ss; 
+                ss << "Command " << "'" << symb << "'" << " not found";
+                throw interpreter_error(ss.str());
+            }
+            Command *cmd = (*cmd_it).second;
+            return cmd;
         }
 
         Interpreter() = default;
