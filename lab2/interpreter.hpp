@@ -76,8 +76,10 @@ class Interpreter {
     private:
 
         bool is_number(std::string &cmd){
-            for (auto x : cmd){
-                if (!isdigit(x)) return false;
+            std::string::iterator beg = cmd.begin();
+            if (cmd[0] == '-') beg++;
+            for (;beg != cmd.end(); beg++){
+                if (!isdigit(*beg)) return false;
             }
             return true;
         }
