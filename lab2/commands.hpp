@@ -5,9 +5,10 @@
 
 class Command {
     public:
-        typedef std::string::iterator striter;
-        virtual void apply(std::stack<int> &stack, striter &begin, const striter &end) = 0;
+        typedef std::string::iterator str_iter;
+        virtual void apply(std::stack<int> &stack, str_iter &begin, const str_iter &end) = 0;
         virtual ~Command() {}
+        // CR: class BinaryOp: Command
         void checktwo(std::stack<int> &stack){
             int size = stack.size();
             if (size == 0) throw interpreter_error("Stack underflow");
@@ -20,7 +21,7 @@ class Command {
 
 class Plus : public Command {
     public:
-        void apply(std::stack<int> &stack, striter &begin, const striter &end) override {
+        void apply(std::stack<int> &stack, str_iter &begin, const str_iter &end) override {
             checktwo(stack);
             int right = stack.top();
             stack.pop();
@@ -32,7 +33,7 @@ class Plus : public Command {
 
 class Minus : public Command {
     public:
-        void apply(std::stack<int> &stack, striter &begin, const striter &end) override {
+        void apply(std::stack<int> &stack, str_iter &begin, const str_iter &end) override {
             checktwo(stack);
             int right = stack.top();
             stack.pop();
@@ -42,9 +43,19 @@ class Minus : public Command {
         }
 };
 
+// CR:
+//class data_stack {
+//public:
+//    int pop() {
+//
+//    }
+//private:
+//    std::stack<int> stack_;
+//};
+
 class Multiply : public Command {
     public:
-        void apply(std::stack<int> &stack, striter &begin, const striter &end) override {
+        void apply(std::stack<int> &stack, str_iter &begin, const str_iter &end) override {
             checktwo(stack);
             int right = stack.top();
             stack.pop();
@@ -56,7 +67,7 @@ class Multiply : public Command {
 
 class Divide : public Command {
     public:
-        void apply(std::stack<int> &stack, striter &begin, const striter &end) override {
+        void apply(std::stack<int> &stack, str_iter &begin, const str_iter &end) override {
             checktwo(stack);
             int right = stack.top();
             stack.pop();
@@ -69,7 +80,7 @@ class Divide : public Command {
 
 class Mod : public Command {
     public:
-        void apply(std::stack<int> &stack, striter &begin, const striter &end) override {
+        void apply(std::stack<int> &stack, str_iter &begin, const str_iter &end) override {
             checktwo(stack);
             int right = stack.top();
             stack.pop();
@@ -82,7 +93,7 @@ class Mod : public Command {
 
 class Dot : public Command {
     public:
-        void apply(std::stack<int> &stack, striter &begin, const striter &end) override {
+        void apply(std::stack<int> &stack, str_iter &begin, const str_iter &end) override {
             if (stack.size() == 0) {
                 throw interpreter_error("Stack underflow");
             }
@@ -95,7 +106,7 @@ class Dot : public Command {
 
 class Less : public Command {
     public:
-        void apply(std::stack<int> &stack, striter &begin, const striter &end) override {
+        void apply(std::stack<int> &stack, str_iter &begin, const str_iter &end) override {
             checktwo(stack);
             int right = stack.top();
             stack.pop();
@@ -107,7 +118,7 @@ class Less : public Command {
 
 class More : public Command {
     public:
-        void apply(std::stack<int> &stack, striter &begin, const striter &end) override {
+        void apply(std::stack<int> &stack, str_iter &begin, const str_iter &end) override {
             checktwo(stack);
             int right = stack.top();
             stack.pop();
@@ -119,7 +130,7 @@ class More : public Command {
 
 class Equal : public Command {
     public:
-        void apply(std::stack<int> &stack, striter &begin, const striter &end) override {
+        void apply(std::stack<int> &stack, str_iter &begin, const str_iter &end) override {
             checktwo(stack);
             int right = stack.top();
             stack.pop();
@@ -131,7 +142,7 @@ class Equal : public Command {
 
 class Dup : public Command {
     public:
-        void apply(std::stack<int> &stack, striter &begin, const striter &end) override {
+        void apply(std::stack<int> &stack, str_iter &begin, const str_iter &end) override {
             if (stack.size() == 0) throw interpreter_error("Stack underflow");
             stack.push(stack.top());
         }
@@ -139,7 +150,7 @@ class Dup : public Command {
 
 class Drop : public Command {
     public:
-        void apply(std::stack<int> &stack, striter &begin, const striter &end) override {
+        void apply(std::stack<int> &stack, str_iter &begin, const str_iter &end) override {
             if (stack.size() == 0) throw interpreter_error("Stack underflow");
             stack.pop();
         }
@@ -147,7 +158,7 @@ class Drop : public Command {
 
 class Swap : public Command {
     public:
-        void apply(std::stack<int> &stack, striter &begin, const striter &end) override {
+        void apply(std::stack<int> &stack, str_iter &begin, const str_iter &end) override {
             checktwo(stack);
             int first = stack.top();
             stack.pop();
@@ -160,7 +171,7 @@ class Swap : public Command {
 
 class Emit : public Command {
     public: 
-        void apply(std::stack<int> &stack, striter &begin, const striter &end) override {
+        void apply(std::stack<int> &stack, str_iter &begin, const str_iter &end) override {
             if (stack.size() == 0) throw interpreter_error("Stack underflow");
             char c = stack.top();
             stack.pop();
@@ -170,14 +181,14 @@ class Emit : public Command {
 
 class Cr : public Command {
     public:
-        void apply(std::stack<int> &stack, striter &begin, const striter &end) override {
+        void apply(std::stack<int> &stack, str_iter &begin, const str_iter &end) override {
             std::cout << std::endl;
         }
 };
 
 class Rot : public Command {
     public:
-        void apply(std::stack<int> &stack, striter &begin, const striter &end) override {
+        void apply(std::stack<int> &stack, str_iter &begin, const str_iter &end) override {
             int size = stack.size(); 
             if (size < 3) {
                 for (int i = 0; i < size; i++) stack.pop();
@@ -197,7 +208,7 @@ class Rot : public Command {
 
 class Over : public Command {
     public:
-        void apply(std::stack<int> &stack, striter &begin, const striter &end) override {
+        void apply(std::stack<int> &stack, str_iter &begin, const str_iter &end) override {
             checktwo(stack);
             int top = stack.top();
             stack.pop();
@@ -209,11 +220,20 @@ class Over : public Command {
         }
 };
 
+// CR: pass to apply
+//struct context {
+//    data_stack &stack;
+//    str_iter &begin;
+//    std::stringstream out;
+//    const str_iter &en;
+//};
+
 class Print : public Command {
     public:
-        void apply(std::stack<int> &stack, striter &begin, const striter &end) override {
+        void apply(std::stack<int> &stack, str_iter &begin, const str_iter &end) override {
             
             //std::cout << "PRINt!!" << std::endl;
+            // CR: escape ." \"" , ." \\"
             begin++;
             while (begin != end && *begin != '"') {
                 std::cout << *begin;

@@ -11,6 +11,7 @@
 #include <sstream>
 #include "commands.hpp"
 
+// CR: move to cpp
 class Interpreter {
     public:
         //typedef std::function<Command *(std::vector<std::string>::iterator &,std::vector<std::string>::iterator &)> creator_f;
@@ -30,9 +31,11 @@ class Interpreter {
             return true;
         }
 
+        // CR: void -> std::string
         void interpret(const std::string::iterator &begin, const std::string::iterator &end){
             std::string::iterator itbeg = begin;
             while (itbeg != end){
+                // ." foo bar "
                 std::string symb = get_symb(itbeg,end);
                 if (symb == "") continue;
                 //std::cout <<"'" << symb << "'" << std::endl;
@@ -42,6 +45,8 @@ class Interpreter {
                 }
                 try {
                     Command *cmd = get_cmd(symb);
+                    // ss -> empty -> ok
+                    // ss -> not empty -> ss
                     cmd->apply(stack_,itbeg,end);
                 } catch (interpreter_error &e){
                     std::cerr << e.what() << std::endl;
@@ -54,6 +59,7 @@ class Interpreter {
         bool is_number(std::string &cmd){
             std::string::iterator beg = cmd.begin();
             if (cmd[0] == '-') beg++;
+            // CR: find_if
             for (;beg != cmd.end(); beg++){
                 if (!isdigit(*beg)) return false;
             }
@@ -62,6 +68,7 @@ class Interpreter {
 
         std::string get_symb(std::string::iterator &begin,const std::string::iterator &end){
             //while (begin != end && (*begin == ' ' || *begin == '\t')) begin++;
+            // CR: find_if
             while (begin != end && *begin == ' ') begin++;
             std::string::iterator itend = begin;
             //while (itend != end && (*itend != ' ' || *itend != '\t')) itend++;
@@ -89,6 +96,7 @@ class Interpreter {
         Interpreter(Interpreter &other) = delete;
         Interpreter& operator=(Interpreter &other) = delete;
 
+        // CR: Command * -> unique_ptr<Command>
         std::unordered_map<std::string,Command*> cmds_;
         std::stack<int> stack_;
 
