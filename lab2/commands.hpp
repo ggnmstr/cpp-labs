@@ -88,7 +88,8 @@ class Dot : public Command {
             }
             int top = stack.top();
             stack.pop();
-            std::cout << top << std::endl;
+            //std::cout << top << std::endl;
+            std::cout << top << ' ';
         }
 };
 
