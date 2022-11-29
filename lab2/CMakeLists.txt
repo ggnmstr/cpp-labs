@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.21)
 project(forth_interpreter)
 
-add_executable(interpret main.cpp commands.cpp)
+add_executable(interpret main.cpp interpreter.cpp commands.cpp)
 
 SET(WARN_FLAGS "-Wall -Wpedantic -Wextra")
 
