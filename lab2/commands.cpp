@@ -1,4 +1,3 @@
-#include <stack>
 #include "interpreter.hpp"
 #include "commands.hpp"
 
