@@ -40,21 +40,19 @@ void Interpreter::interpret(const std::string::iterator &begin, const std::strin
 
 bool Interpreter::is_number(std::string &cmd){
     std::string::iterator beg = cmd.begin();
-    if (cmd[0] == '-') beg++;
-    // CR: find_if
-    for (;beg != cmd.end(); beg++){
-        if (!isdigit(*beg)) return false;
-    }
+    if (cmd[0] == '-' && cmd.length() != 1) beg++;
+
+    auto it = std::find_if(beg,cmd.end(),[](char x){return !isdigit(x);});
+    if (it != cmd.end()) return false;
     return true;
 }
 
 std::string Interpreter::get_symb(std::string::iterator &begin,const std::string::iterator &end){
-    //while (begin != end && (*begin == ' ' || *begin == '\t')) begin++;
-    // CR: find_if
-    while (begin != end && *begin == ' ') begin++;
+    begin = std::find_if(begin,end,[](char x){return x != ' ';});
     std::string::iterator itend = begin;
-    //while (itend != end && (*itend != ' ' || *itend != '\t')) itend++;
-    while (itend != end && *itend != ' ') itend++;
+
+    itend = std::find_if(itend, end,[](char x){return x == ' ';});
+
     std::string x(begin,itend);
     begin = itend;
     return x;   
