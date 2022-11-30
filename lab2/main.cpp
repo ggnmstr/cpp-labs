@@ -1,4 +1,3 @@
-#include <iostream>
 #include "interpreter.hpp"
 
 int main(){

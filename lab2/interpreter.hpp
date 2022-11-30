@@ -11,7 +11,6 @@
 #include <sstream>
 #include "commands.hpp"
 
-// CR: move to cpp
 class Interpreter {
     public:
         //typedef std::function<Command *(std::vector<std::string>::iterator &,std::vector<std::string>::iterator &)> creator_f;
@@ -25,7 +24,7 @@ class Interpreter {
         void interpret(const std::string::iterator &begin, const std::string::iterator &end);
 
     private:
-    
+
         // CR: Command * -> unique_ptr<Command>
         std::unordered_map<std::string,Command*> cmds_;
         std::stack<int> stack_;
