@@ -8,18 +8,21 @@ class Command {
         typedef std::string::iterator str_iter;
         virtual void apply(datastack &stack, str_iter &begin, const str_iter &end) = 0;
         virtual ~Command() {}
-        // CR: class BinaryOp: Command
+};
+
+class BinaryOp : public Command {
+    public:
         void checktwo(datastack &stack){
-            int size = stack.size();
-            if (size == 0) throw interpreter_error("Stack underflow");
-            if (size == 1) {
-                stack.pop();
-                throw interpreter_error("Stack underflow");
+        int size = stack.size();
+        if (size == 0) throw interpreter_error("Stack underflow");
+        if (size == 1) {
+            stack.pop();
+            throw interpreter_error("Stack underflow");
             }
         }
 };
 
-class Plus : public Command {
+class Plus : public BinaryOp {
     public:
         void apply(datastack &stack, str_iter &begin, const str_iter &end) override {
             checktwo(stack);
@@ -29,7 +32,7 @@ class Plus : public Command {
         }
 };
 
-class Minus : public Command {
+class Minus : public BinaryOp {
     public:
         void apply(datastack &stack, str_iter &begin, const str_iter &end) override {
             checktwo(stack);
@@ -39,17 +42,7 @@ class Minus : public Command {
         }
 };
 
-// CR:
-//class data_stack {
-//public:
-//    int pop() {
-//
-//    }
-//private:
-//    std::stack<int> stack_;
-//};
-
-class Multiply : public Command {
+class Multiply : public BinaryOp {
     public:
         void apply(datastack &stack, str_iter &begin, const str_iter &end) override {
             checktwo(stack);
@@ -59,7 +52,7 @@ class Multiply : public Command {
         }
 };
 
-class Divide : public Command {
+class Divide : public BinaryOp {
     public:
         void apply(datastack &stack, str_iter &begin, const str_iter &end) override {
             checktwo(stack);
@@ -70,7 +63,7 @@ class Divide : public Command {
         }
 };
 
-class Mod : public Command {
+class Mod : public BinaryOp {
     public:
         void apply(datastack &stack, str_iter &begin, const str_iter &end) override {
             checktwo(stack);
@@ -93,7 +86,7 @@ class Dot : public Command {
         }
 };
 
-class Less : public Command {
+class Less : public BinaryOp {
     public:
         void apply(datastack &stack, str_iter &begin, const str_iter &end) override {
             checktwo(stack);
@@ -103,7 +96,7 @@ class Less : public Command {
         }
 };
 
-class More : public Command {
+class More : public BinaryOp {
     public:
         void apply(datastack &stack, str_iter &begin, const str_iter &end) override {
             checktwo(stack);
@@ -113,7 +106,7 @@ class More : public Command {
         }
 };
 
-class Equal : public Command {
+class Equal : public BinaryOp {
     public:
         void apply(datastack &stack, str_iter &begin, const str_iter &end) override {
             checktwo(stack);
@@ -139,7 +132,7 @@ class Drop : public Command {
         }
 };
 
-class Swap : public Command {
+class Swap : public BinaryOp {
     public:
         void apply(datastack &stack, str_iter &begin, const str_iter &end) override {
             checktwo(stack);
@@ -183,7 +176,7 @@ class Rot : public Command {
         }
 };
 
-class Over : public Command {
+class Over : public BinaryOp {
     public:
         void apply(datastack &stack, str_iter &begin, const str_iter &end) override {
             checktwo(stack);
