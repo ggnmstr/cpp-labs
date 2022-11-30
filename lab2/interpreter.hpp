@@ -1,14 +1,13 @@
 #pragma once
-#include <iostream>
 #include <sstream>
 #include <algorithm>
 #include <iterator>
 #include <string>
-#include <stack>
 #include <functional>
 #include <vector>
 #include <unordered_map>
 #include <sstream>
+#include "datastack.hpp"
 #include "commands.hpp"
 
 class Interpreter {
@@ -27,7 +26,7 @@ class Interpreter {
 
         // CR: Command * -> unique_ptr<Command>
         std::unordered_map<std::string,Command*> cmds_;
-        std::stack<int> stack_;
+        datastack stack_;
 
         bool is_number(std::string &cmd);
 
