@@ -5,14 +5,14 @@ Interpreter & Interpreter::get_instance(){
             return i;
 }
 
-Interpreter::~Interpreter(){  
-    for (auto e : cmds_){
-        delete e.second;
-    }
-}
+//Interpreter::~Interpreter(){
+//    for (auto e : creators_){
+//        delete e.second;
+//    }
+//}
 
-bool Interpreter::register_cmd(std::string symb, Command *cmd){
-    cmds_[symb] = cmd;
+bool Interpreter::register_creator(std::string symb, const creator_f &creator){
+    creators_[symb] = creator;
     return true;
 }
 
@@ -28,7 +28,7 @@ void Interpreter::interpret(const std::string::iterator &begin, const std::strin
             continue;
         }
         try {
-            Command *cmd = get_cmd(symb);
+            std::unique_ptr<Command> cmd = get_cmd(symb);
             // ss -> empty -> ok
             // ss -> not empty -> ss
             cmd->apply(stack_,itbeg,end);
@@ -58,14 +58,15 @@ std::string Interpreter::get_symb(std::string::iterator &begin,const std::string
     return x;   
 }
 
-Command* Interpreter::get_cmd(std::string &symb){
-    auto cmd_it = cmds_.find(symb);
+std::unique_ptr<Command> Interpreter::get_cmd(std::string &symb){
+    auto cmd_it = creators_.find(symb);
 
-    if (cmd_it == cmds_.end()) {
+    if (cmd_it == creators_.end()) {
         std::stringstream ss; 
         ss << "Command " << "'" << symb << "'" << " not found";
         throw interpreter_error(ss.str());
     }
-    Command *cmd = (*cmd_it).second;
+    creator_f creator = (*cmd_it).second;
+    std::unique_ptr<Command> cmd = creator(symb);
     return cmd;
 }
