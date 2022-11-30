@@ -234,7 +234,7 @@ class Print : public Command {
             
             //std::cout << "PRINt!!" << std::endl;
             // CR: escape ." \"" , ." \\"
-            begin++;
+            if (begin != end) begin++;
             while (begin != end && *begin != '"') {
                 std::cout << *begin;
                 begin++;
