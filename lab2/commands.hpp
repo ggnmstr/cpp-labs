@@ -198,16 +198,11 @@ class Over : public BinaryOp {
 
 class Print : public Command {
     public:
+        Print(std::string &str):body_(str){};
         void apply(datastack &stack, str_iter &begin, const str_iter &end) override {
-            
-            //std::cout << "PRINt!!" << std::endl;
+            std::cout << body_ << std:: endl;
             // CR: escape ." \"" , ." \\"
-            if (begin != end) begin++;
-            while (begin != end && *begin != '"') {
-                std::cout << *begin;
-                begin++;
-            }
-            if (*begin == '"') begin++;
-            std::cout << std::endl;
         }
+    private:
+        std::string body_;
 };

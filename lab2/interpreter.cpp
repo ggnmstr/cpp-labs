@@ -28,7 +28,7 @@ void Interpreter::interpret(const std::string::iterator &begin, const std::strin
             continue;
         }
         try {
-            std::unique_ptr<Command> cmd = get_cmd(symb);
+            std::unique_ptr<Command> cmd = get_cmd(symb,itbeg,end);
             // ss -> empty -> ok
             // ss -> not empty -> ss
             cmd->apply(stack_,itbeg,end);
@@ -58,7 +58,7 @@ std::string Interpreter::get_symb(std::string::iterator &begin,const std::string
     return x;   
 }
 
-std::unique_ptr<Command> Interpreter::get_cmd(std::string &symb){
+std::unique_ptr<Command> Interpreter::get_cmd(std::string &symb, std::string::iterator &begin, const std::string::iterator &end){
     auto cmd_it = creators_.find(symb);
 
     if (cmd_it == creators_.end()) {
@@ -67,6 +67,6 @@ std::unique_ptr<Command> Interpreter::get_cmd(std::string &symb){
         throw interpreter_error(ss.str());
     }
     creator_f creator = (*cmd_it).second;
-    std::unique_ptr<Command> cmd = creator(symb);
+    std::unique_ptr<Command> cmd = creator(begin,end);
     return cmd;
 }

@@ -13,7 +13,7 @@
 
 class Interpreter {
     public:
-        typedef std::function<std::unique_ptr<Command> (std::string &)> creator_f;
+        typedef std::function<std::unique_ptr<Command> (std::string::iterator &, const std::string::iterator &)> creator_f;
         ~Interpreter() = default;
 
         static Interpreter & get_instance();
@@ -33,7 +33,7 @@ class Interpreter {
 
         std::string get_symb(std::string::iterator &begin,const std::string::iterator &end);
 
-        std::unique_ptr<Command>  get_cmd(std::string &symb);
+        std::unique_ptr<Command>  get_cmd(std::string &symb, std::string::iterator &begin, const std::string::iterator &end);
 
         Interpreter() = default;
 
