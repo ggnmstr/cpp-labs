@@ -208,7 +208,6 @@ class Print : public Command {
         Print(std::string &str):body_(str){};
         void apply(context &context) override {
             std::cout << body_ << std:: endl;
-            // CR: escape ." \"" , ." \\"
         }
     private:
         std::string body_;

@@ -64,11 +64,18 @@ namespace {
     bool dot = Interpreter::get_instance().register_creator(".", dot_creator);
 
     std::unique_ptr<Command> print_creator(std::string::iterator &begin, const std::string::iterator &end){
+        // CR: escape ." \"" , ." \\"
         std::string str;
         if (begin != end) begin++;
-        while (begin != end && *begin != '"') {
-            str += *begin;
-            begin++;
+        bool screen = false;
+        for (;begin != end; begin++){
+            if (*begin == '\\') {
+                begin++;
+                str+= *begin;
+                continue;
+            }
+            if (*begin == '"') break;
+            str+= *begin;
         }
         if (*begin == '"') begin++;
         auto ptr = std::make_unique<Print>(str);
