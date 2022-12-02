@@ -44,12 +44,9 @@ bool Interpreter::is_number(std::string &cmd){
 }
 
 std::string Interpreter::get_prefix(std::string::iterator &begin, const std::string::iterator &end){
-    // CR: https://en.cppreference.com/w/cpp/string/byte/isblank
-    begin = std::find_if(begin,end,[](char x){return x != ' ';});
+    begin = std::find_if_not(begin,end,::isblank);
     std::string::iterator itend = begin;
-
-    itend = std::find_if(itend, end,[](char x){return x == ' ';});
-
+    itend = std::find_if(itend, end,::isblank);
     std::string x(begin,itend);
     begin = itend;
     return x;   
