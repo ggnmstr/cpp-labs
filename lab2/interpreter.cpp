@@ -11,29 +11,24 @@ bool Interpreter::register_creator(std::string symb, const creator_f &creator){
 }
 
 std::string Interpreter::interpret(const std::string::iterator &begin, const std::string::iterator &end){
-    std::stringstream ss;
+    context_.out.str(std::string());
     std::string::iterator itbeg = begin;
     while (itbeg != end){
-        // ." foo bar "
         std::string symb = get_symb(itbeg,end);
         if (symb == "") continue;
-        //std::cout <<"'" << symb << "'" << std::endl;
         if (is_number(symb)){
             context_.stack.push(std::stoi(symb));
             continue;
         }
         try {
             std::unique_ptr<Command> cmd = get_cmd(symb,itbeg,end);
-            // ss -> empty -> ok
-            // ss -> not empty -> ss
             cmd->apply(context_);
         } catch (interpreter_error &e){
-            std::cerr << e.what() << std::endl;
+            throw interpreter_error(e.what());
         }
     }
-    const std::string &str = ss.str();
-    if (str.empty()) return "ok";
-    return str;
+    std::string str = context_.out.str();
+    return str.empty() ? "ok" : str;
 }
 
 bool Interpreter::is_number(std::string &cmd){

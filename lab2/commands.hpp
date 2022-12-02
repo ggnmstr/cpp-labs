@@ -87,8 +87,7 @@ class Dot : public Command {
                 throw interpreter_error("Stack underflow");
             }
             int top = stack.pop();
-            //std::cout << top << std::endl;
-            std::cout << top << ' ';
+            context.out << top << ' ';
         }
 };
 
@@ -161,14 +160,14 @@ class Emit : public Command {
             datastack& stack = context.stack;
             if (stack.size() == 0) throw interpreter_error("Stack underflow");
             char c = stack.pop();
-            std::cout << c << std::endl;
+            context.out << c << std::endl;
         }
 };
 
 class Cr : public Command {
     public:
         void apply(context &context) override {
-            std::cout << std::endl;
+            context.out << std::endl;
         }
 };
 
@@ -207,7 +206,7 @@ class Print : public Command {
     public:
         Print(std::string &str):body_(str){};
         void apply(context &context) override {
-            std::cout << body_ << std:: endl;
+            context.out << body_ << std::endl;
         }
     private:
         std::string body_;
