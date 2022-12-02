@@ -1,5 +1,5 @@
 #include "interpreter.hpp"
-
+#include <cassert>
 Interpreter & Interpreter::get_instance(){
             static Interpreter i;
             return i;
@@ -41,7 +41,7 @@ bool Interpreter::is_number(std::string &cmd){
         beg++;
     }
     auto non_digit_it = std::find_if_not(beg, cmd.end(), ::isdigit);
-    return non_digit_it != cmd.end();
+    return non_digit_it == cmd.end();
 }
 
 std::string Interpreter::get_prefix(std::string::iterator &begin, const std::string::iterator &end){
