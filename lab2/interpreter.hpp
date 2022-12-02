@@ -17,7 +17,6 @@ class Interpreter {
 
         bool register_creator(std::string symb, const creator_f &creator);
 
-        // CR: void -> std::string
         std::string interpret(const std::string::iterator &begin, const std::string::iterator &end);
 
     private:
