@@ -64,7 +64,6 @@ namespace {
     bool dot = Interpreter::get_instance().register_creator(".", dot_creator);
 
     std::unique_ptr<Command> print_creator(std::string::iterator &begin, const std::string::iterator &end){
-        // CR: escape ." \"" , ." \\"
         std::string str;
         if (begin != end) begin++;
         bool screen = false;

@@ -74,6 +74,7 @@ class Mod : public BinaryOp {
             checktwo(stack);
             int right = stack.pop();
             int left = stack.pop();
+            if (right == 0) throw interpreter_error("Module by zero");
             stack.push(left % right);
 
         }
@@ -83,9 +84,7 @@ class Dot : public Command {
     public:
         void apply(context &context) override {
             datastack& stack = context.stack;
-            if (stack.size() == 0) {
-                throw interpreter_error("Stack underflow");
-            }
+            if (stack.size() == 0) throw interpreter_error("Stack underflow");
             int top = stack.pop();
             context.out << top << ' ';
         }
@@ -206,7 +205,7 @@ class Print : public Command {
     public:
         Print(std::string &str):body_(str){};
         void apply(context &context) override {
-            context.out << body_ << std::endl;
+            context.out << body_ << ' ';
         }
     private:
         std::string body_;
