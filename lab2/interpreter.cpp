@@ -11,25 +11,24 @@ bool Interpreter::register_creator(std::string symb, const creator_f &creator){
 }
 
 std::string Interpreter::interpret(const std::string::iterator &begin, const std::string::iterator &end){
-    // CR: make context local variable
-    context_.out.str(std::string());
+    context context(stack_);
     std::string::iterator itbeg = begin;
     while (itbeg != end){
         std::string prefix = get_prefix(itbeg, end);
         if (prefix.empty()) continue;
         if (is_number(prefix)){
             // CR: make command Push
-            context_.stack.push(std::stoi(prefix));
+            context.stack.push(std::stoi(prefix));
             continue;
         }
         try {
             std::unique_ptr<Command> cmd = get_cmd(prefix, itbeg, end);
-            cmd->apply(context_);
+            cmd->apply(context);
         } catch (interpreter_error &e){
-            context_.out << e.what();
+            context.out << e.what();
         }
     }
-    std::string str = context_.out.str();
+    std::string str = context.out.str();
     return str.empty() ? "ok" : str;
 }
 

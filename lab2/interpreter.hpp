@@ -23,7 +23,7 @@ class Interpreter {
 
         // CR: unordered_map -> vector
         std::unordered_map<std::string,creator_f> creators_;
-        context context_;
+        datastack stack_;
 
         bool is_number(std::string &cmd);
 

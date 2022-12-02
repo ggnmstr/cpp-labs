@@ -3,6 +3,7 @@
 #include <sstream>
 
 struct context {
-    datastack stack;
+    context(datastack &stack):stack(stack){};
+    datastack &stack;
     std::stringstream out;
 };
