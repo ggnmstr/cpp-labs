@@ -95,3 +95,46 @@ TEST(ModuleTest,ModuleByZero){
     x = i.interpret(cmd.begin(),cmd.end());
     ASSERT_EQ(x,"Module by zero");
 }
+
+TEST(SwapTest,SwapTwoThree){
+    Interpreter &i = Interpreter::get_instance();
+    std::string cmd, x;
+    cmd = "1 2 swap";
+    x = i.interpret(cmd.begin(),cmd.end());
+    ASSERT_EQ(x,"ok");
+    cmd = ". .";
+    x = i.interpret(cmd.begin(),cmd.end());
+    ASSERT_EQ(x,"1 2 ");
+    cmd = "1 2 swap swap . .";
+    x = i.interpret(cmd.begin(),cmd.end());
+    ASSERT_EQ(x,"2 1 ");
+
+}
+
+TEST(PrintTest,SpecificSymbols){
+    Interpreter &i = Interpreter::get_instance();
+    std::string cmd, x;
+    cmd = ".\" \\\"";
+    x = i.interpret(cmd.begin(),cmd.end());
+    ASSERT_EQ(x,"\" ");
+    cmd = ".\" \\\\";
+    x = i.interpret(cmd.begin(),cmd.end());
+    ASSERT_EQ(x,"\\ ");
+}
+
+TEST(RotTest, RotTest){
+    Interpreter &i = Interpreter::get_instance();
+    std::string cmd, x;
+    cmd = "1 rot";
+    x = i.interpret(cmd.begin(),cmd.end());
+    ASSERT_EQ(x,"Stack underflow");
+    cmd = "1 2 rot";
+    x = i.interpret(cmd.begin(),cmd.end());
+    ASSERT_EQ(x,"Stack underflow");
+    cmd = "1 2 3 rot";
+    x = i.interpret(cmd.begin(),cmd.end());
+    ASSERT_EQ(x,"ok");
+    cmd = ". . .";
+    x = i.interpret(cmd.begin(),cmd.end());
+    ASSERT_EQ(x,"1 3 2 ");
+}
