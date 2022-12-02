@@ -24,7 +24,7 @@ std::string Interpreter::interpret(const std::string::iterator &begin, const std
             std::unique_ptr<Command> cmd = get_cmd(symb,itbeg,end);
             cmd->apply(context_);
         } catch (interpreter_error &e){
-            throw interpreter_error(e.what());
+            context_.out << e.what();
         }
     }
     std::string str = context_.out.str();
