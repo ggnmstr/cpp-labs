@@ -21,14 +21,15 @@ class Interpreter {
 
     private:
 
+        // CR: unordered_map -> vector
         std::unordered_map<std::string,creator_f> creators_;
         context context_;
 
         bool is_number(std::string &cmd);
 
-        std::string get_symb(std::string::iterator &begin,const std::string::iterator &end);
+        std::string get_prefix(std::string::iterator &begin, const std::string::iterator &end);
 
-        std::unique_ptr<Command>  get_cmd(std::string &symb, std::string::iterator &begin, const std::string::iterator &end);
+        std::unique_ptr<Command> get_cmd(std::string &symb, std::string::iterator &begin, const std::string::iterator &end);
 
         Interpreter() = default;
 

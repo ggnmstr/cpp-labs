@@ -22,6 +22,31 @@ class BinaryOp : public Command {
         }
 };
 
+// CR:
+// https://en.cppreference.com/w/cpp/utility/functional/plus
+//    int plus(int i, int j) {
+//        return i + j;
+//    }
+//
+//    int minus(int i, int j) {
+//        return i - j;
+//    }
+//
+//    void foo() {
+//        std::function<int(int, int)> func = ::minus;
+//        auto func = ::plus;
+//    }
+//    class BinaryOperation: Command {
+//    public:
+//        void apply(context &context) override {
+//            int a = context.stack.pop();
+//            int b = context.stack.pop();
+//            op()(a, b);
+//        }
+//
+//        virtual std::function<int(int, int)> op() = 0;
+//    };
+
 class Plus : public BinaryOp {
     public:
         void apply(context &context) override {

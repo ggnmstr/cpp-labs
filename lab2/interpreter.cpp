@@ -11,17 +11,19 @@ bool Interpreter::register_creator(std::string symb, const creator_f &creator){
 }
 
 std::string Interpreter::interpret(const std::string::iterator &begin, const std::string::iterator &end){
+    // CR: make context local variable
     context_.out.str(std::string());
     std::string::iterator itbeg = begin;
     while (itbeg != end){
-        std::string symb = get_symb(itbeg,end);
-        if (symb == "") continue;
-        if (is_number(symb)){
-            context_.stack.push(std::stoi(symb));
+        std::string prefix = get_prefix(itbeg, end);
+        if (prefix.empty()) continue;
+        if (is_number(prefix)){
+            // CR: make command Push
+            context_.stack.push(std::stoi(prefix));
             continue;
         }
         try {
-            std::unique_ptr<Command> cmd = get_cmd(symb,itbeg,end);
+            std::unique_ptr<Command> cmd = get_cmd(prefix, itbeg, end);
             cmd->apply(context_);
         } catch (interpreter_error &e){
             context_.out << e.what();
@@ -32,15 +34,18 @@ std::string Interpreter::interpret(const std::string::iterator &begin, const std
 }
 
 bool Interpreter::is_number(std::string &cmd){
+    assert(!cmd.empty());
     std::string::iterator beg = cmd.begin();
-    if (cmd[0] == '-' && cmd.length() != 1) beg++;
-
-    auto it = std::find_if(beg,cmd.end(),[](char x){return !isdigit(x);});
-    if (it != cmd.end()) return false;
-    return true;
+    if (cmd[0] == '-') {
+        if (cmd.length() == 1) return false;
+        beg++;
+    }
+    auto non_digit_it = std::find_if_not(beg, cmd.end(), ::isdigit);
+    return non_digit_it != cmd.end();
 }
 
-std::string Interpreter::get_symb(std::string::iterator &begin,const std::string::iterator &end){
+std::string Interpreter::get_prefix(std::string::iterator &begin, const std::string::iterator &end){
+    // CR: https://en.cppreference.com/w/cpp/string/byte/isblank
     begin = std::find_if(begin,end,[](char x){return x != ' ';});
     std::string::iterator itend = begin;
 

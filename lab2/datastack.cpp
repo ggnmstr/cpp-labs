@@ -5,6 +5,7 @@ int datastack::top(){
 }
 
 int datastack::pop(){
+    // CR: throw exception
     int x = stack_.top();
     stack_.pop();
     return x;
