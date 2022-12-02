@@ -65,7 +65,6 @@ namespace {
 
     std::unique_ptr<Command> print_creator(std::string::iterator &begin, const std::string::iterator &end){
         std::string str;
-        // CR: *end() is ub
         // CR: short path
         if (begin != end) begin++;
         for (;begin != end; begin++){
