@@ -10,98 +10,58 @@ class Command {
         virtual ~Command() {}
 };
 
-class BinaryOp : public Command {
+class BinaryOperation : public Command {
+    public: 
+        void apply(context &context) override{
+        try {
+            int a = context.stack.pop();
+            int b = context.stack.pop();
+            context.stack.push(op()(b,a));
+        } catch (std::runtime_error & e){
+            context.out << e.what();
+        }   
+    }   
+        virtual std::function<int(int,int)> op() = 0;
+};
+
+class Plus : public BinaryOperation {
     public:
-        void checktwo(datastack &stack){
-        int size = stack.size();
-        if (size == 0) throw interpreter_error("Stack underflow");
-        if (size == 1) {
-            stack.pop();
-            throw interpreter_error("Stack underflow");
-            }
+        std::function<int(int,int)> op() override{
+            return std::plus<>();
         }
 };
 
-// CR:
-// https://en.cppreference.com/w/cpp/utility/functional/plus
-//    int plus(int i, int j) {
-//        return i + j;
-//    }
-//
-//    int minus(int i, int j) {
-//        return i - j;
-//    }
-//
-//    void foo() {
-//        std::function<int(int, int)> func = ::minus;
-//        auto func = ::plus;
-//    }
-//    class BinaryOperation: Command {
-//    public:
-//        void apply(context &context) override {
-//            int a = context.stack.pop();
-//            int b = context.stack.pop();
-//            op()(a, b);
-//        }
-//
-//        virtual std::function<int(int, int)> op() = 0;
-//    };
-
-class Plus : public BinaryOp {
+class Minus : public BinaryOperation {
     public:
-        void apply(context &context) override {
-            datastack& stack = context.stack;
-            checktwo(stack);
-            int right = stack.pop();
-            int left = stack.pop();
-            stack.push(left+right);
+        std::function<int(int,int)> op() override{
+            return std::minus<>();
         }
 };
 
-class Minus : public BinaryOp {
+class Multiply : public BinaryOperation {
     public:
-        void apply(context &context) override {
-            datastack& stack = context.stack;
-            checktwo(stack);
-            int right = stack.pop();
-            int left = stack.pop();
-            stack.push(left-right);
+        std::function<int(int,int)> op() override{
+            return std::multiplies<>();
         }
 };
 
-class Multiply : public BinaryOp {
+class Divide : public BinaryOperation {
     public:
-        void apply(context &context) override {
-            datastack& stack = context.stack;
-            checktwo(stack);
-            int right = stack.pop();
-            int left = stack.pop();
-            stack.push(left*right);
+        std::function<int(int,int)> op() override{
+            return [](int lhs, int rhs){
+                if (rhs == 0) throw interpreter_error("Division by zero");
+                return lhs / rhs;
+            };
         }
 };
 
-class Divide : public BinaryOp {
+class Mod : public BinaryOperation {
     public:
-        void apply(context &context) override {
-            datastack& stack = context.stack;
-            checktwo(stack);
-            int right = stack.pop();
-            int left = stack.pop();
-            if (right == 0) throw interpreter_error("Division by zero");
-            stack.push(left/right);
-        }
-};
-
-class Mod : public BinaryOp {
-    public:
-        void apply(context &context) override {
-            datastack& stack = context.stack;
-            checktwo(stack);
-            int right = stack.pop();
-            int left = stack.pop();
-            if (right == 0) throw interpreter_error("Module by zero");
-            stack.push(left % right);
-
+        std::function<int(int,int)> op() override{
+            return [](int lhs, int rhs){
+                if (rhs == 0) throw interpreter_error("Module by zero");
+                return lhs % rhs;
+            };
         }
 };
 
@@ -109,42 +69,34 @@ class Dot : public Command {
     public:
         void apply(context &context) override {
             datastack& stack = context.stack;
-            if (stack.size() == 0) throw interpreter_error("Stack underflow");
-            int top = stack.pop();
-            context.out << top << ' ';
+            try {
+                int top = stack.pop();
+                context.out << top << ' ';
+            } catch (interpreter_error &e){
+                context.out << e.what();
+            }
+
         }
 };
 
-class Less : public BinaryOp {
+class Less : public BinaryOperation {
     public:
-        void apply(context &context) override {
-            datastack& stack = context.stack;
-            checktwo(stack);
-            int right = stack.pop();
-            int left = stack.pop();
-            stack.push(left < right);
+        std::function<int(int,int)> op() override{
+            return std::less<>();
         }
 };
 
-class More : public BinaryOp {
+class More : public BinaryOperation {
     public:
-        void apply(context &context) override {
-            datastack& stack = context.stack;
-            checktwo(stack);
-            int right = stack.pop();
-            int left = stack.pop();
-            stack.push(left > right);
+        std::function<int(int,int)> op() override{
+            return std::greater<>();
         }
 };
 
-class Equal : public BinaryOp {
+class Equal : public BinaryOperation {
     public:
-        void apply(context &context) override {
-            datastack& stack = context.stack;
-            checktwo(stack);
-            int right = stack.pop();
-            int left = stack.pop();
-            stack.push(left == right);
+        std::function<int(int,int)> op() override{
+            return std::equal_to<>();
         }
 };
 
@@ -152,8 +104,11 @@ class Dup : public Command {
     public:
         void apply(context &context) override {
             datastack& stack = context.stack;
-            if (stack.size() == 0) throw interpreter_error("Stack underflow");
-            stack.push(stack.top());
+            try{
+                stack.push(stack.top());
+            } catch (interpreter_error &e){
+                context.out << e.what();
+            }
         }
 };
 
@@ -161,20 +116,28 @@ class Drop : public Command {
     public:
         void apply(context &context) override {
             datastack& stack = context.stack;
-            if (stack.size() == 0) throw interpreter_error("Stack underflow");
-            stack.pop();
+            try{
+                stack.pop();
+            } catch (interpreter_error &e){
+                context.out << e.what();
+            }
+            
         }
 };
 
-class Swap : public BinaryOp {
+class Swap : public Command {
     public:
         void apply(context &context) override {
             datastack& stack = context.stack;
-            checktwo(stack);
-            int first = stack.pop();
-            int second = stack.pop();
-            stack.push(first);
-            stack.push(second);
+            try{
+                int first = stack.pop();
+                int second = stack.pop();
+                stack.push(first);
+                stack.push(second);
+            } catch (interpreter_error &e){
+                context.out << e.what();
+            }
+
         }
 };
 
@@ -182,9 +145,13 @@ class Emit : public Command {
     public: 
         void apply(context &context) override {
             datastack& stack = context.stack;
-            if (stack.size() == 0) throw interpreter_error("Stack underflow");
-            char c = stack.pop();
-            context.out << c << std::endl;
+            try {
+                char c = stack.pop();
+                context.out << c << std::endl;
+            } catch (interpreter_error &e){
+                context.out << e.what();
+            }
+
         }
 };
 
@@ -199,30 +166,34 @@ class Rot : public Command {
     public:
         void apply(context &context) override {
             datastack& stack = context.stack;
-            int size = stack.size();
-            if (size < 3) {
-                for (int i = 0; i < size; i++) stack.pop();
-                throw interpreter_error("Stack underflow");
+            try {
+                int three = stack.pop();
+                int two = stack.pop();
+                int one = stack.pop();
+                stack.push(two);
+                stack.push(three);
+                stack.push(one);
+            } catch (interpreter_error &e){
+                context.out << e.what();
             }
-            int three = stack.pop();
-            int two = stack.pop();
-            int one = stack.pop();
-            stack.push(two);
-            stack.push(three);
-            stack.push(one);
+
         }
 };
 
-class Over : public BinaryOp {
+class Over : public Command {
     public:
         void apply(context &context) override {
             datastack& stack = context.stack;
-            checktwo(stack);
-            int top = stack.pop();
-            int back = stack.pop();
-            stack.push(back);
-            stack.push(top);
-            stack.push(back);
+            try{
+                int top = stack.pop();
+                int back = stack.pop();
+                stack.push(back);
+                stack.push(top);
+                stack.push(back);
+            } catch (interpreter_error &e){
+                context.out << e.what();
+            }
+
         }
 };
 
