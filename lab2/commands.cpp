@@ -66,11 +66,11 @@ namespace {
     std::unique_ptr<Command> print_creator(std::string::iterator &begin, const std::string::iterator &end){
         std::string str;
         // CR: short path
-        if (begin != end) begin++;
-        for (;begin != end; begin++){
+        if (begin != end) ++begin;
+        for (;begin != end; ++begin){
             if (*begin == '\\') {
                 // CR: escape for " and backslash only
-                begin++;
+                ++begin;
                 str+= *begin;
                 continue;
             }
@@ -78,7 +78,7 @@ namespace {
             str+= *begin;
         }
         // CR: *end() is ub
-        if (*begin == '"') begin++;
+        if (*begin == '"') ++begin;
         return std::make_unique<Print>(str);
     }
     bool print = Interpreter::get_instance().register_creator(".\"",print_creator);
