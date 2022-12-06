@@ -11,7 +11,7 @@ class Command {
 };
 
 class BinaryOperation : public Command {
-    public: 
+    public:
         void apply(context &context) override{
         try {
             int a = context.stack.pop();
@@ -19,9 +19,19 @@ class BinaryOperation : public Command {
             context.stack.push(op()(b,a));
         } catch (std::runtime_error & e){
             context.out << e.what();
-        }   
-    }   
+        }
+    }
         virtual std::function<int(int,int)> op() = 0;
+};
+
+class Push : public Command {
+    public:
+        Push(int n):num_(n){};
+        void apply(context &context) override {
+            context.stack.push(num_);
+        }
+    private:
+        int num_;
 };
 
 class Plus : public BinaryOperation {
@@ -121,7 +131,7 @@ class Drop : public Command {
             } catch (interpreter_error &e){
                 context.out << e.what();
             }
-            
+
         }
 };
 
@@ -142,7 +152,7 @@ class Swap : public Command {
 };
 
 class Emit : public Command {
-    public: 
+    public:
         void apply(context &context) override {
             datastack& stack = context.stack;
             try {

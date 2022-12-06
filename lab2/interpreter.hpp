@@ -1,10 +1,9 @@
 #pragma once
-#include <algorithm>
 #include <iterator>
 #include <string>
 #include <functional>
-#include <unordered_map>
 #include <memory>
+#include <vector>
 #include "datastack.hpp"
 #include "commands.hpp"
 
@@ -15,21 +14,15 @@ class Interpreter {
 
         static Interpreter & get_instance();
 
-        bool register_creator(std::string symb, const creator_f &creator);
+        bool register_creator(const creator_f &creator);
 
         std::string interpret(const std::string::iterator &begin, const std::string::iterator &end);
 
     private:
 
         // CR: unordered_map -> vector
-        std::unordered_map<std::string,creator_f> creators_;
+        std::vector<creator_f> creators_;
         datastack stack_;
-
-        bool is_number(std::string &cmd);
-
-        std::string get_prefix(std::string::iterator &begin, const std::string::iterator &end);
-
-        std::unique_ptr<Command> get_cmd(std::string &symb, std::string::iterator &begin, const std::string::iterator &end);
 
         Interpreter() = default;
 

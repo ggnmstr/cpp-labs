@@ -1,12 +1,13 @@
 #include "interpreter.hpp"
+#include <algorithm>
 #include <cassert>
 Interpreter & Interpreter::get_instance(){
             static Interpreter i;
             return i;
 }
 
-bool Interpreter::register_creator(std::string symb, const creator_f &creator){
-    creators_[symb] = creator;
+bool Interpreter::register_creator(const creator_f &creator){
+    creators_.push_back(creator);
     return true;
 }
 
@@ -14,15 +15,16 @@ std::string Interpreter::interpret(const std::string::iterator &begin, const std
     context context(stack_);
     std::string::iterator itbeg = begin;
     while (itbeg != end){
-        std::string prefix = get_prefix(itbeg, end);
-        if (prefix.empty()) continue;
-        if (is_number(prefix)){
-            // CR: make command Push
-            context.stack.push(std::stoi(prefix));
-            continue;
+        // move itbeg to first non-blank symbol
+        itbeg = std::find_if_not(itbeg,end,::isblank);
+        if (itbeg == end) break;
+        std::unique_ptr<Command> cmd;
+        for (const creator_f& creator : creators_){
+            cmd = creator(itbeg,end);
+            if (cmd != nullptr) break;
         }
+        if (cmd == nullptr) throw interpreter_error("unknown cmd");
         try {
-            std::unique_ptr<Command> cmd = get_cmd(prefix, itbeg, end);
             cmd->apply(context);
         } catch (interpreter_error &e){
             context.out << e.what();
@@ -30,37 +32,4 @@ std::string Interpreter::interpret(const std::string::iterator &begin, const std
     }
     std::string str = context.out.str();
     return str.empty() ? "ok" : str;
-}
-
-bool Interpreter::is_number(std::string &cmd){
-    assert(!cmd.empty());
-    std::string::iterator beg = cmd.begin();
-    if (cmd[0] == '-') {
-        if (cmd.length() == 1) return false;
-        beg++;
-    }
-    auto non_digit_it = std::find_if_not(beg, cmd.end(), ::isdigit);
-    return non_digit_it == cmd.end();
-}
-
-std::string Interpreter::get_prefix(std::string::iterator &begin, const std::string::iterator &end){
-    begin = std::find_if_not(begin,end,::isblank);
-    std::string::iterator itend = begin;
-    itend = std::find_if(itend, end,::isblank);
-    std::string x(begin,itend);
-    begin = itend;
-    return x;   
-}
-
-std::unique_ptr<Command> Interpreter::get_cmd(std::string &symb, std::string::iterator &begin, const std::string::iterator &end){
-    auto cmd_it = creators_.find(symb);
-
-    if (cmd_it == creators_.end()) {
-        std::stringstream ss; 
-        ss << "Command " << "'" << symb << "'" << " not found";
-        throw interpreter_error(ss.str());
-    }
-    creator_f creator = (*cmd_it).second;
-    std::unique_ptr<Command> cmd = creator(begin,end);
-    return cmd;
 }

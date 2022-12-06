@@ -16,7 +16,3 @@ int datastack::pop() {
 void datastack::push(int x) {
     stack_.push(x);
 }
-
-int datastack::size() {
-    return stack_.size();
-}
