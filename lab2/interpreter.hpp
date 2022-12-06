@@ -1,31 +1,35 @@
 #pragma once
+
 #include <iterator>
 #include <string>
 #include <functional>
 #include <memory>
 #include <vector>
+#include <list>
 #include "datastack.hpp"
 #include "commands.hpp"
 
 class Interpreter {
-    public:
-        typedef std::function<std::unique_ptr<Command> (std::string::iterator &, const std::string::iterator &)> creator_f;
-        ~Interpreter() = default;
+public:
+    typedef std::function<std::unique_ptr<Command>(std::string::iterator &, const std::string::iterator &)> creator_f;
 
-        static Interpreter & get_instance();
+    ~Interpreter() = default;
 
-        bool register_creator(const creator_f &creator);
+    static Interpreter &get_instance();
 
-        std::string interpret(const std::string::iterator &begin, const std::string::iterator &end);
+    bool register_creator(const creator_f &creator);
 
-    private:
+    std::string interpret(const std::string::iterator &begin, const std::string::iterator &end);
 
-        // CR: unordered_map -> vector
-        std::vector<creator_f> creators_;
-        datastack stack_;
+private:
 
-        Interpreter() = default;
+    // CR: unordered_map -> vector
+    std::vector<creator_f> creators_;
+    datastack stack_;
 
-        Interpreter(Interpreter &other) = delete;
-        Interpreter& operator=(Interpreter &other) = delete;
+    Interpreter() = default;
+
+    Interpreter(Interpreter &other) = delete;
+
+    Interpreter &operator=(Interpreter &other) = delete;
 };
