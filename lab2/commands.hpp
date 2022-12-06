@@ -30,7 +30,7 @@ public:
 
 class Push : public Command {
 public:
-    Push(int n) : num_(n) {};
+    explicit Push(int n) : num_(n) {};
 
     void apply(context &context) override {
         context.stack.push(num_);
@@ -215,7 +215,7 @@ public:
 
 class Print : public Command {
 public:
-    Print(std::string &str) : body_(str) {};
+    explicit Print(std::string &str) : body_(str) {};
 
     void apply(context &context) override {
         context.out << body_ << ' ';
