@@ -23,7 +23,6 @@ public:
 
 private:
 
-    // CR: unordered_map -> vector
     std::vector<creator_f> creators_;
     datastack stack_;
 
@@ -32,4 +31,6 @@ private:
     Interpreter(Interpreter &other) = delete;
 
     Interpreter &operator=(Interpreter &other) = delete;
+
+    std::list<std::unique_ptr<Command>> get_cmds(const std::string::iterator &begin, const std::string::iterator &end);
 };

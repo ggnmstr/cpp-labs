@@ -12,11 +12,10 @@ bool Interpreter::register_creator(const creator_f &creator) {
     return true;
 }
 
-std::string Interpreter::interpret(const std::string::iterator &begin, const std::string::iterator &end) {
-    context context(stack_);
+std::list<std::unique_ptr<Command>> Interpreter::get_cmds(const std::string::iterator &begin, const std::string::iterator &end) {
+    std::list<std::unique_ptr<Command>> cmdlist;
     std::string::iterator itbeg = begin;
-    while (itbeg != end) {
-        // move itbeg to first non-blank symbol
+    while(itbeg != end){
         itbeg = std::find_if_not(itbeg, end, ::isblank);
         if (itbeg == end) break;
         std::unique_ptr<Command> cmd;
@@ -24,7 +23,17 @@ std::string Interpreter::interpret(const std::string::iterator &begin, const std
             cmd = creator(itbeg, end);
             if (cmd != nullptr) break;
         }
-        if (cmd == nullptr) throw interpreter_error("unknown cmd");
+        if (cmd == nullptr) throw interpreter_error("Unknown cmd");
+        cmdlist.push_back(std::move(cmd));
+    }
+    return cmdlist;
+}
+
+std::string Interpreter::interpret(const std::string::iterator &begin, const std::string::iterator &end) {
+    context context(stack_);
+    const std::list<std::unique_ptr<Command>> &cmdlist = get_cmds(begin,end);
+    for (const std::unique_ptr<Command> &cmdptr : cmdlist){
+        Command *cmd = cmdptr.get();
         try {
             cmd->apply(context);
         } catch (interpreter_error &e) {
