@@ -19,6 +19,7 @@ std::list<std::unique_ptr<Command>> Interpreter::get_cmds(const std::string::ite
         itbeg = std::find_if_not(itbeg, end, ::isblank);
         if (itbeg == end) break;
         std::unique_ptr<Command> cmd;
+        //std::cout << "TRYING TO INTERPRET PART:\"" << std::string(itbeg,end) << "\"" << std::endl;
         for (const creator_f &creator: creators_) {
             cmd = creator(itbeg, end);
             if (cmd != nullptr) break;

@@ -102,20 +102,21 @@ namespace {
     std::unique_ptr<Command> print_creator(std::string::iterator &begin, const std::string::iterator &end) {
         if (!is_valid(begin, end, ".\"")) return std::unique_ptr<Command>(nullptr);
         std::string str;
-        // CR: short path
-        if (begin != end) ++begin;
+        if (begin == end) return std::make_unique<Print>(str);
+        ++begin;
         for (; begin != end; ++begin) {
             if (*begin == '\\') {
-                // CR: escape for " and backslash only
                 ++begin;
-                str += *begin;
-                continue;
+                if (*begin == '\"' || *begin == '\\'){
+                    str += *begin;
+                    continue;
+                }
+                --begin;
             }
             if (*begin == '"') break;
             str += *begin;
         }
-        // CR: *end() is ub
-        if (*begin == '"') ++begin;
+        if (begin != end && *begin == '"') ++begin;
         return std::make_unique<Print>(str);
     }
 
@@ -173,5 +174,35 @@ namespace {
 
     bool over = Interpreter::get_instance().register_creator(over_creator);
 
+/*
+    // ADVANCED VERSION:
+    // -----------------------
+
+    std::unique_ptr<Command> if_creator(std::string::iterator &begin, const std::string::iterator &end) {
+        if (!is_valid(begin,end,"if")) return std::unique_ptr<Command>(nullptr);
+        std::string::iterator semicolon_it = std::find_if(begin,end,[](char x){return x == ';';});
+        if (semicolon_it == end) throw interpreter_error("No semicolon at the end of if statement");
+        std::string strcopy(begin,end);
+        std::string::iterator begcopy = begin;
+//        std::cout << "CURBEGIN = " << *begin << std::endl;
+        size_t elseex = strcopy.find(" else ");
+        if (elseex == std::string::npos){
+            size_t then = strcopy.find(" then ");
+            if (then == std::string::npos) throw interpreter_error("Invalid syntax (no then)");
+            begcopy += then;
+//            std::cout << "THEN = " << then << std::endl;
+//            std::cout << "INTERPRETING:\"" << std::string(begin,begcopy) << "\"" << std::endl;
+            std::list<std::unique_ptr<Command>> thenbranch = Interpreter::get_instance().get_cmds(begin,begcopy);
+            begin = ++semicolon_it;
+            return std::make_unique<Ifbranch>(std::move(thenbranch));
+        }
+
+
+
+
+    }
+
+    bool ifbranch = Interpreter::get_instance().register_creator(if_creator);
+*/
 
 }

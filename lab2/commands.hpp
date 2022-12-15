@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <utility>
 #include "context.hpp"
 #include "interpreter_error.hpp"
 
@@ -224,3 +225,25 @@ public:
 private:
     std::string body_;
 };
+
+/*
+class Ifbranch : public Command {
+public:
+    explicit Ifbranch(std::list<std::unique_ptr<Command>> thenlist) : thenbranch_(std::move(thenlist)) {};
+
+    Ifbranch(std::list<std::unique_ptr<Command>> thenlist, std::list<std::unique_ptr<Command>> elselist)
+            : thenbranch_(std::move(thenlist)), elsebranch_(std::move(elselist)) {};
+
+    void apply(context &context) override {
+        if (context.stack.top() == 0) return;
+        if (elsebranch_.empty()){
+            for (auto &x : thenbranch_){
+                x->apply(context);
+            }
+        }
+    }
+private:
+    std::list<std::unique_ptr<Command>> thenbranch_;
+    std::list<std::unique_ptr<Command>> elsebranch_;
+};
+*/

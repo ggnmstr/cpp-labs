@@ -21,6 +21,7 @@ public:
 
     std::string interpret(const std::string::iterator &begin, const std::string::iterator &end);
 
+    std::list<std::unique_ptr<Command>> get_cmds(const std::string::iterator &begin, const std::string::iterator &end);
 private:
 
     std::vector<creator_f> creators_;
@@ -32,5 +33,4 @@ private:
 
     Interpreter &operator=(Interpreter &other) = delete;
 
-    std::list<std::unique_ptr<Command>> get_cmds(const std::string::iterator &begin, const std::string::iterator &end);
 };
