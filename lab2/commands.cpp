@@ -17,13 +17,11 @@ namespace {
     std::unique_ptr<Command> push_creator(std::string::iterator &begin, const std::string::iterator &end) {
         std::string::iterator bcopy = begin;
         if (bcopy != end && *bcopy == '-') ++bcopy;
-        if (bcopy == end || std::isblank(*bcopy)) return std::unique_ptr<Command>(nullptr);
-        std::string::iterator ecopy;
-        ecopy = std::find_if(bcopy, end, ::isblank);
-        auto ncheck = std::find_if_not(bcopy, ecopy, ::isdigit);
-        if (ncheck == ecopy) {
+        if (bcopy == end || std::isblank(*bcopy) || !std::isdigit(*bcopy)) return std::unique_ptr<Command>(nullptr);
+        auto ncheck = std::find_if_not(bcopy, end, ::isdigit);
+        if (::isblank(*ncheck) || ncheck == end) {
             auto ptr = std::make_unique<Push>(std::stoi(std::string(begin, ncheck)));
-            begin = ecopy;
+            begin = ncheck;
             return ptr;
         }
         return std::unique_ptr<Command>(nullptr);
@@ -101,17 +99,15 @@ namespace {
 
     std::unique_ptr<Command> print_creator(std::string::iterator &begin, const std::string::iterator &end) {
         if (!is_valid(begin, end, ".\"")) return std::unique_ptr<Command>(nullptr);
+        if (begin == end) return std::unique_ptr<Command>(nullptr);
         std::string str;
-        if (begin == end) return std::make_unique<Print>(str);
         ++begin;
         for (; begin != end; ++begin) {
             if (*begin == '\\') {
                 ++begin;
-                if (*begin == '\"' || *begin == '\\'){
-                    str += *begin;
-                    continue;
-                }
-                --begin;
+                if (*begin != '\"' && *begin != '\\' ) throw interpreter_error("Wrong escape character");
+                str += *begin;
+                continue;
             }
             if (*begin == '"') break;
             str += *begin;

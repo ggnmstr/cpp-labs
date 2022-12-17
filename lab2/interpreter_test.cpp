@@ -79,12 +79,13 @@ TEST(MultiplyTest, TwoNegatives) {
     x = i.interpret(cmd.begin(), cmd.end());
     ASSERT_EQ(x, "1 ");
 }
-
+// CR: ByZero, Empty, OneNumber, Round, IntegerDivision
 TEST(DivideTest, DivisionByZero) {
     Interpreter &i = Interpreter::get_instance();
     std::string cmd, x;
     cmd = "100 0 /";
     x = i.interpret(cmd.begin(), cmd.end());
+    // CR: check that exception is thrown
     ASSERT_EQ(x, "Division by zero");
 }
 

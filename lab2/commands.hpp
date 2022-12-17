@@ -7,23 +7,18 @@
 
 class Command {
 public:
-    typedef std::string::iterator str_iter;
 
     virtual void apply(context &context) = 0;
 
-    virtual ~Command() {}
+    virtual ~Command() = default;
 };
 
 class BinaryOperation : public Command {
 public:
     void apply(context &context) override {
-        try {
-            int a = context.stack.pop();
-            int b = context.stack.pop();
-            context.stack.push(op()(b, a));
-        } catch (std::runtime_error &e) {
-            context.out << e.what();
-        }
+        int a = context.stack.pop();
+        int b = context.stack.pop();
+        context.stack.push(op()(b, a));
     }
 
     virtual std::function<int(int, int)> op() = 0;
@@ -86,13 +81,8 @@ class Dot : public Command {
 public:
     void apply(context &context) override {
         datastack &stack = context.stack;
-        try {
-            int top = stack.pop();
-            context.out << top << ' ';
-        } catch (interpreter_error &e) {
-            context.out << e.what();
-        }
-
+        int top = stack.pop();
+        context.out << top << ' ';
     }
 };
 
@@ -121,11 +111,7 @@ class Dup : public Command {
 public:
     void apply(context &context) override {
         datastack &stack = context.stack;
-        try {
-            stack.push(stack.top());
-        } catch (interpreter_error &e) {
-            context.out << e.what();
-        }
+        stack.push(stack.top());
     }
 };
 
@@ -133,12 +119,7 @@ class Drop : public Command {
 public:
     void apply(context &context) override {
         datastack &stack = context.stack;
-        try {
-            stack.pop();
-        } catch (interpreter_error &e) {
-            context.out << e.what();
-        }
-
+        stack.pop();
     }
 };
 
@@ -146,15 +127,10 @@ class Swap : public Command {
 public:
     void apply(context &context) override {
         datastack &stack = context.stack;
-        try {
-            int first = stack.pop();
-            int second = stack.pop();
-            stack.push(first);
-            stack.push(second);
-        } catch (interpreter_error &e) {
-            context.out << e.what();
-        }
-
+        int first = stack.pop();
+        int second = stack.pop();
+        stack.push(first);
+        stack.push(second);
     }
 };
 
@@ -162,13 +138,8 @@ class Emit : public Command {
 public:
     void apply(context &context) override {
         datastack &stack = context.stack;
-        try {
-            char c = stack.pop();
-            context.out << c << std::endl;
-        } catch (interpreter_error &e) {
-            context.out << e.what();
-        }
-
+        char c = stack.pop();
+        context.out << c << std::endl;
     }
 };
 
@@ -183,16 +154,12 @@ class Rot : public Command {
 public:
     void apply(context &context) override {
         datastack &stack = context.stack;
-        try {
-            int three = stack.pop();
-            int two = stack.pop();
-            int one = stack.pop();
-            stack.push(two);
-            stack.push(three);
-            stack.push(one);
-        } catch (interpreter_error &e) {
-            context.out << e.what();
-        }
+        int three = stack.pop();
+        int two = stack.pop();
+        int one = stack.pop();
+        stack.push(two);
+        stack.push(three);
+        stack.push(one);
 
     }
 };
@@ -201,15 +168,11 @@ class Over : public Command {
 public:
     void apply(context &context) override {
         datastack &stack = context.stack;
-        try {
-            int top = stack.pop();
-            int back = stack.pop();
-            stack.push(back);
-            stack.push(top);
-            stack.push(back);
-        } catch (interpreter_error &e) {
-            context.out << e.what();
-        }
+        int top = stack.pop();
+        int back = stack.pop();
+        stack.push(back);
+        stack.push(top);
+        stack.push(back);
 
     }
 };

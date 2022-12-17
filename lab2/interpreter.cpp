@@ -33,14 +33,14 @@ std::list<std::unique_ptr<Command>> Interpreter::get_cmds(const std::string::ite
 std::string Interpreter::interpret(const std::string::iterator &begin, const std::string::iterator &end) {
     context context(stack_);
     const std::list<std::unique_ptr<Command>> &cmdlist = get_cmds(begin,end);
-    for (const std::unique_ptr<Command> &cmdptr : cmdlist){
-        Command *cmd = cmdptr.get();
-        try {
+    try {
+        for (const std::unique_ptr<Command> &cmdptr : cmdlist){
+            Command *cmd = cmdptr.get();
             cmd->apply(context);
-        } catch (interpreter_error &e) {
-            context.out << e.what();
         }
+    } catch (interpreter_error &e){
+        context.out << e.what();
     }
-    std::string str = context.out.str();
-    return str.empty() ? "ok" : str;
+    if (context.out.str().empty()) context.out << "ok";
+    return context.out.str();
 }
