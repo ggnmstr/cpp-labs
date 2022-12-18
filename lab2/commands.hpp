@@ -139,7 +139,7 @@ public:
     void apply(context &context) override {
         datastack &stack = context.stack;
         char c = stack.pop();
-        context.out << c << std::endl;
+        context.out << c;
     }
 };
 
