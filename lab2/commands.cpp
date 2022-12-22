@@ -3,16 +3,15 @@
 #include "interpreter.hpp"
 #include "commands.hpp"
 
-bool is_valid(std::string::iterator &begin, const std::string::iterator &end, const std::string &str) {
-    std::string::iterator bcopy = std::find_if(begin, end, ::isblank);
-    if (std::equal(begin, bcopy, str.begin(), str.end())) {
-        begin = bcopy;
-        return true;
-    }
-    return false;
-}
-
 namespace {
+    bool is_valid(std::string::iterator &begin, const std::string::iterator &end, const std::string &str) {
+        std::string::iterator bcopy = std::find_if(begin, end, ::isblank);
+        if (std::equal(begin, bcopy, str.begin(), str.end())) {
+            begin = bcopy;
+            return true;
+        }
+        return false;
+    }
 
     std::unique_ptr<Command> push_creator(std::string::iterator &begin, const std::string::iterator &end) {
         std::string::iterator bcopy = begin;
